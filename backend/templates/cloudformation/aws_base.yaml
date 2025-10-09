@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'InfraX Generated CloudFormation Template'
+
+Parameters:
+  Environment:
+    Type: String
+    Default: dev
+    Description: Environment name
+
+  ProjectName:
+    Type: String
+    Default: infrax-project
+    Description: Project name
+
+  AWSRegion:
+    Type: String
+    Default: us-west-2
+    Description: AWS Region
+
+Mappings:
+  RegionMap:
+    us-east-1:
+      AMI: ami-0abcdef1234567890
+    us-west-2:
+      AMI: ami-0abcdef1234567890
+    eu-west-1:
+      AMI: ami-0abcdef1234567890
+
+Resources:
+  # Resources will be added by the IaC Generation Agent
+
+Outputs:
+  # Outputs will be added by the IaC Generation Agent
