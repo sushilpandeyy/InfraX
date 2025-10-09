@@ -172,8 +172,12 @@ build/
 *.sqlite
 *.sqlite3
 
-# Generated IaC code (keep templates, ignore generated output)
+# Generated IaC code and diagrams (keep templates, ignore generated output)
 data/generated_code/
+data/diagrams/
+data/*.db
+data/*.sqlite
+data/*.sqlite3
 
 # Logs
 *.log

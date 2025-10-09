@@ -50,6 +50,14 @@ class DiagramGenerator:
             # Generate Mermaid diagram using GPT
             diagram_code = self._generate_mermaid_diagram(cloud_provider, services, architecture)
 
+            # Extract service descriptions for tooltips
+            service_descriptions = {}
+            for service in services:
+                service_name = service.get('service', service.get('component', 'Unknown'))
+                purpose = service.get('purpose', service.get('description', ''))
+                if purpose:
+                    service_descriptions[service_name] = purpose
+
             # Save diagram
             filename = self._save_diagram(diagram_code, cloud_provider)
 
@@ -57,6 +65,7 @@ class DiagramGenerator:
                 "success": True,
                 "diagram_type": "mermaid",
                 "diagram_code": diagram_code,
+                "service_descriptions": service_descriptions,
                 "filename": filename,
                 "file_path": str(self.output_dir / filename),
                 "cloud_provider": cloud_provider,

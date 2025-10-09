@@ -282,6 +282,7 @@ class BrahmaOrchestrator:
                     "code_path": iac_result.get("file_path"),
                     "architecture": plan_result.get("architecture", {}),
                     "mermaid_diagram": diagram_result.get("diagram_code"),
+                    "service_descriptions": diagram_result.get("service_descriptions", {}),
                     "diagram_file": diagram_result.get("filename"),
                     "html_preview": html_path
                 }
