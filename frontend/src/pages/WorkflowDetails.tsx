@@ -56,56 +56,56 @@ const WorkflowDetails: React.FC = () => {
   ];
 
   return (
-    <div>
+    <div className="animate-slide-up">
       {/* Header */}
       <div className="mb-8">
-        <Link to="/workflows" className="text-purple-600 hover:text-purple-800 mb-4 inline-block">
+        <Link to="/workflows" className="text-blue-light hover:text-blue-primary mb-4 inline-block font-semibold transition-colors">
           ← Back to Workflows
         </Link>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Workflow Details</h1>
-        <p className="text-gray-600">ID: {workflow.workflow_id}</p>
+        <h1 className="text-4xl font-bold text-white mb-2" style={{ fontFamily: 'Space Grotesk' }}>Workflow Details</h1>
+        <p className="text-gray-400 font-mono text-sm">ID: {workflow.workflow_id}</p>
       </div>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-sm text-gray-600 mb-2">Cloud Provider</h3>
-          <p className="text-2xl font-bold text-blue-600 uppercase">
+        <div className="glass-card rounded-2xl p-6 glass-hover border border-blue-primary/30">
+          <h3 className="text-sm text-gray-400 mb-2 font-semibold uppercase tracking-wide">Cloud Provider</h3>
+          <p className="text-2xl font-bold text-blue-light uppercase" style={{ fontFamily: 'Space Grotesk' }}>
             {workflow.summary.cloud_provider}
           </p>
         </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-sm text-gray-600 mb-2">Region</h3>
-          <p className="text-2xl font-bold text-green-600">
+        <div className="glass-card rounded-2xl p-6 glass-hover border border-blue-primary/30">
+          <h3 className="text-sm text-gray-400 mb-2 font-semibold uppercase tracking-wide">Region</h3>
+          <p className="text-2xl font-bold text-green-400" style={{ fontFamily: 'Space Grotesk' }}>
             {workflow.summary.region}
           </p>
         </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-sm text-gray-600 mb-2">Services</h3>
-          <p className="text-2xl font-bold text-purple-600">
+        <div className="glass-card rounded-2xl p-6 glass-hover border border-blue-primary/30">
+          <h3 className="text-sm text-gray-400 mb-2 font-semibold uppercase tracking-wide">Services</h3>
+          <p className="text-2xl font-bold text-blue-primary" style={{ fontFamily: 'Space Grotesk' }}>
             {workflow.summary.services_count}
           </p>
         </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-sm text-gray-600 mb-2">Est. Savings</h3>
-          <p className="text-2xl font-bold text-yellow-600">
+        <div className="glass-card rounded-2xl p-6 glass-hover border border-blue-primary/30">
+          <h3 className="text-sm text-gray-400 mb-2 font-semibold uppercase tracking-wide">Est. Savings</h3>
+          <p className="text-2xl font-bold text-yellow-400" style={{ fontFamily: 'Space Grotesk' }}>
             ${workflow.summary.estimated_savings.toFixed(2)}/mo
           </p>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="bg-white rounded-lg shadow">
-        <div className="border-b border-gray-200">
+      <div className="glass-card rounded-2xl border border-blue-primary/30">
+        <div className="border-b border-blue-primary/20">
           <nav className="flex space-x-8 px-6" aria-label="Tabs">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as 'overview' | 'diagram' | 'code' | 'cost')}
-                className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                className={`py-4 px-1 border-b-2 font-semibold text-sm transition-all ${
                   activeTab === tab.id
-                    ? 'border-purple-500 text-purple-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? 'border-blue-primary text-blue-light'
+                    : 'border-transparent text-gray-400 hover:text-white hover:border-blue-primary/50'
                 }`}
               >
                 <span className="mr-2">{tab.icon}</span>
@@ -120,32 +120,32 @@ const WorkflowDetails: React.FC = () => {
           {activeTab === 'overview' && (
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">Input Prompt</h3>
-                <p className="bg-gray-50 p-4 rounded-lg text-gray-700">
+                <h3 className="text-lg font-bold text-white mb-3" style={{ fontFamily: 'Space Grotesk' }}>Input Prompt</h3>
+                <p className="glass p-5 rounded-xl text-gray-300 border border-blue-primary/20">
                   {workflow.input.prompt}
                 </p>
               </div>
 
               {workflow.input.location && (
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Target Location</h3>
-                  <p className="bg-gray-50 p-4 rounded-lg text-gray-700">
+                  <h3 className="text-lg font-bold text-white mb-3" style={{ fontFamily: 'Space Grotesk' }}>Target Location</h3>
+                  <p className="glass p-5 rounded-xl text-gray-300 border border-blue-primary/20">
                     📍 {workflow.input.location}
                   </p>
                 </div>
               )}
 
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">Location Rationale</h3>
-                <p className="bg-blue-50 p-4 rounded-lg text-gray-700">
+                <h3 className="text-lg font-bold text-white mb-3" style={{ fontFamily: 'Space Grotesk' }}>Location Rationale</h3>
+                <p className="glass p-5 rounded-xl text-gray-300 border border-blue-primary/30">
                   {workflow.summary.location_rationale}
                 </p>
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">Architecture Details</h3>
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <pre className="text-sm text-gray-700 whitespace-pre-wrap">
+                <h3 className="text-lg font-bold text-white mb-3" style={{ fontFamily: 'Space Grotesk' }}>Architecture Details</h3>
+                <div className="glass p-5 rounded-xl border border-blue-primary/20">
+                  <pre className="text-sm text-gray-300 whitespace-pre-wrap">
                     {JSON.stringify(workflow.summary.architecture, null, 2)}
                   </pre>
                 </div>
@@ -156,9 +156,9 @@ const WorkflowDetails: React.FC = () => {
           {/* Diagram Tab */}
           {activeTab === 'diagram' && (
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Architecture Diagram</h3>
+              <h3 className="text-lg font-bold text-white mb-4" style={{ fontFamily: 'Space Grotesk' }}>Architecture Diagram</h3>
               {workflow.summary.mermaid_diagram ? (
-                <div className="bg-gray-50 p-6 rounded-lg overflow-x-auto">
+                <div className="glass p-6 rounded-xl overflow-x-auto border border-blue-primary/20">
                   <MermaidDiagram
                     diagram={workflow.summary.mermaid_diagram}
                     serviceDescriptions={workflow.summary.service_descriptions}
@@ -174,12 +174,12 @@ const WorkflowDetails: React.FC = () => {
           {activeTab === 'code' && (
             <div>
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">Terraform Code</h3>
-                <button className="text-sm text-purple-600 hover:text-purple-800">
+                <h3 className="text-lg font-bold text-white" style={{ fontFamily: 'Space Grotesk' }}>Terraform Code</h3>
+                <button className="text-sm text-blue-light hover:text-blue-primary">
                   Download Code
                 </button>
               </div>
-              <div className="bg-gray-900 text-gray-100 p-6 rounded-lg overflow-x-auto">
+              <div className="glass-dark text-gray-100 p-6 rounded-xl overflow-x-auto border border-blue-primary/20">
                 <p className="text-sm text-gray-400 mb-2">File: {workflow.summary.code_file}</p>
                 <p className="text-sm">
                   Terraform code has been generated and saved to the backend.
@@ -191,24 +191,24 @@ const WorkflowDetails: React.FC = () => {
           {/* Cost Tab */}
           {activeTab === 'cost' && (
             <div className="space-y-6">
-              <div className="bg-green-50 border border-green-200 p-6 rounded-lg">
-                <h3 className="text-lg font-semibold text-green-900 mb-2">
+              <div className="glass border border-green-400/30 p-6 rounded-xl">
+                <h3 className="text-lg font-bold text-green-400 mb-2" style={{ fontFamily: 'Space Grotesk' }}>
                   Estimated Monthly Savings
                 </h3>
-                <p className="text-4xl font-bold text-green-600 mb-2">
+                <p className="text-4xl font-bold text-green-400 mb-2">
                   ${workflow.summary.estimated_savings.toFixed(2)}
                 </p>
-                <p className="text-sm text-green-700">
+                <p className="text-sm text-green-300">
                   Based on AI-powered cost optimization strategies
                 </p>
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                <h3 className="text-lg font-bold text-white mb-3" style={{ fontFamily: 'Space Grotesk' }}>
                   Cost Optimization Strategies
                 </h3>
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <pre className="text-sm text-gray-700 whitespace-pre-wrap">
+                <div className="glass p-5 rounded-xl border border-blue-primary/20">
+                  <pre className="text-sm text-gray-300 whitespace-pre-wrap">
                     {JSON.stringify(workflow.steps['2_cost_optimization'].strategies || {}, null, 2)}
                   </pre>
                 </div>

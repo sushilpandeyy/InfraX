@@ -13,9 +13,11 @@ const Sidebar: React.FC = () => {
   ];
 
   return (
-    <div className="w-64 bg-gray-900 text-white min-h-screen p-6">
+    <div className="w-64 glass-dark min-h-screen p-6 border-r border-blue-primary/20">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold">InfraX</h1>
+        <h1 className="text-2xl font-bold text-white mb-1" style={{ fontFamily: 'Space Grotesk' }}>
+          InfraX
+        </h1>
         <p className="text-sm text-gray-400">Brahma Platform</p>
       </div>
 
@@ -24,10 +26,10 @@ const Sidebar: React.FC = () => {
           <Link
             key={item.path}
             to={item.path}
-            className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
+            className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ${
               location.pathname === item.path
-                ? 'bg-purple-600 text-white'
-                : 'text-gray-300 hover:bg-gray-800'
+                ? 'bg-blue-primary text-white shadow-lg shadow-blue-primary/30'
+                : 'text-gray-400 hover:bg-blue-primary/10 hover:text-white'
             }`}
           >
             <span className="text-xl">{item.icon}</span>
@@ -36,8 +38,8 @@ const Sidebar: React.FC = () => {
         ))}
       </nav>
 
-      <div className="mt-auto pt-8 border-t border-gray-800">
-        <div className="px-4 py-3">
+      <div className="mt-auto pt-8 border-t border-blue-primary/20 absolute bottom-6 left-6 right-6">
+        <div className="px-4 py-3 glass rounded-xl">
           <p className="text-xs text-gray-500">Version 1.0</p>
           <p className="text-xs text-gray-500">Multi-Agent AI System</p>
         </div>

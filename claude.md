@@ -1,148 +1,374 @@
-# InfraX - Intelligent IaC Orchestration Platform
+# InfraX - Brahma: Intelligent IaC Orchestration Platform
 
 ## Project Overview
-This project develops an intelligent Infrastructure as Code (IaC) orchestration platform using three specialized AI agents that work together to automate cloud infrastructure management.
+InfraX is an intelligent Infrastructure as Code (IaC) orchestration platform powered by "Brahma" - a multi-agent AI system that automates cloud infrastructure management using GPT-4.
 
-## Core AI Agents
+**Current Version:** 1.0 (Production-Ready for Code Generation)
 
-### 1. Service Selection Agent
-- Analyzes application requirements to recommend optimal cloud services
-- Supports AWS, Azure, and GCP
-- Provides service comparison and selection logic
+---
 
-### 2. Cost Optimization Agent
-- Performs real-time cost analysis
-- Predictive modeling for cost forecasting
-- Resource right-sizing recommendations
-- Target: 40-60% reduction in cloud spending
-- ML-driven demand prediction and automated resource scaling
+## Brahma Architecture
 
-### 3. IaC Generation Agent
-- Creates production-ready infrastructure code
-- Supports Terraform, CloudFormation, and Pulumi
-- Built-in best practices and security standards
-- Generates deployment-ready scripts
+### Core Components (All Operational ✅)
 
-## Platform Features
+**1. Intelligent Planner Tool**
+- Location: `backend/brahma/tools/intelligent_planner.py`
+- Purpose: Analyzes natural language prompts and plans complete infrastructure
+- Features:
+  - Location-aware cloud provider selection (AWS/Azure/GCP)
+  - Automatic region optimization for lowest latency
+  - Complete architecture design
+  - Service mapping for all components
+  - Multi-cloud region knowledge base
 
-### Unified Workflow Engine
-- Orchestrates all three agents seamlessly
-- Requirement ingestion and processing
-- Service selection pipeline
-- Cost analysis integration
-- Code generation workflow
-- Automated deployment capabilities
+**2. Service Selection Agent**
+- Location: `backend/brahma/agents/service_selection.py`
+- Purpose: Recommends optimal cloud services
+- Features:
+  - 200+ cloud services across AWS, Azure, GCP
+  - Workload-specific recommendations
+  - Service comparison and alternatives
+  - Best practices application
+  - Provider comparison mode
 
-### Architecture
-- Microservices architecture
-- Docker/Kubernetes deployment
-- React frontend for user interface
-- Cloud provider API integrations (AWS, Azure, GCP)
-- CI/CD platform integration
-- Monitoring tools integration
+**3. Cost Optimization Agent**
+- Location: `backend/brahma/agents/cost_optimization.py`
+- Purpose: Analyzes costs and identifies savings (40-60% target)
+- Features:
+  - AI-powered cost analysis
+  - Right-sizing recommendations
+  - Reserved instance strategies
+  - Storage tiering optimization
+  - 12-month cost forecasting
+  - Resource scheduling strategies
 
-## Key Benefits
-- **80% reduction** in infrastructure setup time
-- **40-60% cost savings** through optimization
-- Eliminates over-provisioning
-- Provides senior cloud manager expertise at scale
-- Suitable for organizations of all sizes
+**4. IaC Generation Agent**
+- Location: `backend/brahma/agents/iac_generation.py`
+- Purpose: Generates production-ready Terraform code
+- Features:
+  - Terraform code only (fixed)
+  - Security best practices built-in
+  - Multi-AZ deployment configurations
+  - Auto-scaling setup
+  - Monitoring and logging included
+  - Supports AWS, Azure, GCP
 
-## Tech Stack (Local Development)
+**5. Diagram Generator Tool**
+- Location: `backend/brahma/tools/diagram_generator.py`
+- Purpose: Creates visual architecture diagrams
+- Features:
+  - Mermaid diagram generation (React-compatible)
+  - Network topology visualization
+  - Service relationship mapping
+  - Data flow diagrams
+  - Interactive HTML preview
+  - GitHub/GitLab compatible
 
-### Backend
-- **Runtime**: Python with FastAPI
-- **Database**: SQLite (file-based)
-- **AI/ML**: scikit-learn, pandas
-- **Cloud SDKs**: boto3 (AWS), azure-sdk, google-cloud
-- **Cache**: In-memory Python dictionaries
+**6. Unified Orchestrator**
+- Location: `backend/brahma/core/orchestrator.py`
+- Purpose: Coordinates all agents and tools
+- Features:
+  - Intelligent workflow mode (auto-planning)
+  - Standard workflow mode (manual control)
+  - 5-step automated process
+  - Workflow history tracking
+  - Complete result packaging
 
-### Frontend
-- **Framework**: React with TypeScript
-- **Dev Server**: Vite
-- **State Management**: React Context API
-- **Styling**: Tailwind CSS
-- **HTTP Client**: Axios
+---
 
-### Project Structure
+## Project Structure
+
 ```
 InfraX/
 ├── backend/
-│   ├── agents/
-│   │   ├── service_selection.py
-│   │   ├── cost_optimization.py
-│   │   └── iac_generation.py
+│   ├── brahma/                    # Brahma AI System
+│   │   ├── agents/
+│   │   │   ├── __init__.py
+│   │   │   ├── service_selection.py
+│   │   │   ├── cost_optimization.py
+│   │   │   └── iac_generation.py
+│   │   ├── core/
+│   │   │   ├── __init__.py
+│   │   │   └── orchestrator.py
+│   │   ├── tools/
+│   │   │   ├── __init__.py
+│   │   │   ├── intelligent_planner.py
+│   │   │   └── diagram_generator.py
+│   │   ├── utils/
+│   │   │   └── __init__.py
+│   │   └── __init__.py
 │   ├── api/
-│   │   └── main.py
-│   ├── models/
-│   │   └── database.py
+│   │   └── main.py                # FastAPI server (simplified)
 │   ├── templates/
-│   │   ├── terraform/
-│   │   ├── cloudformation/
-│   │   └── pulumi/
-│   └── requirements.txt
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── context/
-│   │   └── api/
-│   ├── package.json
-│   └── vite.config.ts
+│   │   └── terraform/
+│   │       └── aws_base.tf
+│   ├── requirements.txt
+│   ├── cli.py                     # Demo CLI (not active)
+│   └── .env.example
 ├── data/
-│   ├── infrastructure.db
-│   └── generated_code/
-└── claude.md
+│   ├── generated_code/            # Terraform files output
+│   └── diagrams/                  # Mermaid diagrams + HTML previews
+├── PROJECT_VISION.txt             # Complete project vision document
+└── CLAUDE.md                      # This file (to be gitignored)
 ```
 
-## Development Commands
+---
 
-### Backend Setup
-```bash
-cd backend
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
-python main.py            # Start FastAPI server on http://localhost:8000
+## Tech Stack
+
+### Backend
+- **Runtime:** Python 3.8+
+- **Framework:** FastAPI (REST API)
+- **AI:** OpenAI GPT-4 (all agents and tools)
+- **IaC Output:** Terraform only
+- **Visualization:** Mermaid.js
+- **Storage:** File-based (local development)
+
+### Dependencies
+```
+fastapi
+uvicorn
+pydantic
+openai
+python-dotenv
+requests
 ```
 
-### Frontend Setup
-```bash
-cd frontend
-npm install
-npm run dev               # Start Vite dev server on http://localhost:5173
-```
+### Future Frontend
+- **Framework:** React with TypeScript (planned)
+- **Visualization:** Mermaid React component
+- **State:** React Context API
+- **Styling:** Tailwind CSS
 
-### Testing Commands
-```bash
-# Backend
-cd backend
-pytest                    # Run Python tests
-black .                   # Format Python code
-flake8 .                  # Lint Python code
-
-# Frontend
-cd frontend
-npm test                  # Run Jest tests
-npm run lint              # Run ESLint
-npm run type-check        # Run TypeScript checks
-```
+---
 
 ## Environment Setup
-```bash
-# Create project directories
-mkdir -p backend/{agents,api,models,templates/{terraform,cloudformation,pulumi}}
-mkdir -p frontend/src/{components,pages,context,api}
-mkdir -p data/generated_code
 
-# Initialize SQLite database
-cd backend && python -c "import sqlite3; sqlite3.connect('../data/infrastructure.db').close()"
+### Required Environment Variables
+```bash
+# .env file
+OPENAI_API_KEY=sk-your-key-here
 ```
 
-## API Endpoints
-- `GET /api/health` - Health check
-- `POST /api/analyze-requirements` - Service Selection Agent
-- `POST /api/optimize-costs` - Cost Optimization Agent
-- `POST /api/generate-iac` - IaC Generation Agent
-- `GET /api/workflows` - List workflow executions
-- `POST /api/workflows` - Start new workflow
+### Setup Commands
+```bash
+# Backend setup
+cd backend
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+# Create .env file
+cp .env.example .env
+# Add your OpenAI API key to .env
+```
+
+---
+
+## Workflow Modes
+
+### Mode 1: Intelligent Workflow (Recommended)
+**Input:** Natural language prompt + optional location
+
+**Process:**
+1. 🧠 Intelligent Planning - Auto-selects cloud provider & region
+2. 💰 Cost Optimization - Identifies savings opportunities
+3. 📋 Service Refinement - Maps to specific services
+4. 🏗️ IaC Generation - Creates Terraform code
+5. 🎨 Diagram Generation - Visual architecture (Mermaid)
+
+**Example:**
+```python
+from brahma.core.orchestrator import BrahmaOrchestrator
+
+brahma = BrahmaOrchestrator()
+result = brahma.execute_intelligent_workflow(
+    prompt="Build e-commerce platform for Indian users with payment gateway",
+    location="India"
+)
+
+# Returns:
+# - cloud_provider: "aws"
+# - region: "ap-south-1"
+# - terraform_code: Complete .tf file
+# - mermaid_diagram: Architecture visualization
+# - estimated_savings: Cost optimization suggestions
+```
+
+### Mode 2: Standard Workflow
+**Input:** Structured requirements with cloud provider specified
+
+```python
+result = brahma.execute_full_workflow({
+    "description": "Web application with database",
+    "workload_type": "web",
+    "scale": "medium",
+    "cloud_provider": "aws"  # User specifies provider
+})
+```
+
+---
+
+## Output Files
+
+### Generated Files Location
+
+**Terraform Code:**
+- Path: `/data/generated_code/`
+- Format: `{provider}_terraform_{timestamp}.tf`
+- Example: `aws_terraform_20241008_143022.tf`
+
+**Mermaid Diagrams:**
+- Path: `/data/diagrams/`
+- Formats:
+  - `.mmd` - Mermaid code (React-compatible)
+  - `.html` - Interactive HTML preview
+- Example: `aws_diagram_20241008_143022.mmd`
+
+**Workflow Results:**
+Complete JSON with all step outputs including:
+- Infrastructure plan
+- Cost analysis
+- Service recommendations
+- Generated code
+- Diagram code
+- Provider selection rationale
+
+---
+
+## Key Features
+
+### ✅ Implemented (V1.0)
+- Multi-agent AI system with specialized roles
+- Natural language infrastructure planning
+- Location-aware cloud provider selection
+- Automatic region optimization
+- Production-ready Terraform generation
+- Cost optimization (40-60% target)
+- Security best practices built-in
+- Mermaid diagram generation
+- React-compatible visualizations
+- Multi-cloud support (AWS, Azure, GCP)
+
+### ⏳ Planned (Future Versions)
+- Actual deployment orchestration
+- Real-time cloud pricing API integration
+- Infrastructure validation and testing
+- Existing infrastructure migration
+- Compliance scanning (SOC2, HIPAA, PCI)
+- Multi-environment management (dev/staging/prod)
+- Disaster recovery planning
+- React frontend development
+- User authentication
+- Database persistence
+
+---
+
+## Development Guidelines
+
+### Adding New Agents
+1. Create new agent file in `backend/brahma/agents/`
+2. Implement agent class with GPT-4 integration
+3. Add agent to orchestrator initialization
+4. Update workflow steps as needed
+
+### Adding New Tools
+1. Create tool file in `backend/brahma/tools/`
+2. Implement tool class with specific functionality
+3. Integrate with orchestrator if needed
+4. Add to relevant workflow steps
+
+### Code Standards
+- All agents use GPT-4 for intelligence
+- Error handling in all methods
+- Return structured dictionaries with `success` field
+- Include timestamps in all outputs
+- Use type hints for all functions
+- Document all public methods
+
+---
+
+## Important Notes
+
+### Current Limitations
+- IaC output is Terraform only (CloudFormation/Pulumi removed for simplicity)
+- Diagram format is Mermaid only (best for React integration)
+- No actual deployment - only code generation
+- Cost estimates are AI-based, not real-time pricing
+- File-based storage (no database yet)
+- No user authentication
+- Local development only
+
+### Production Considerations
+Before production deployment, add:
+1. User authentication and authorization
+2. Database for workflow persistence (PostgreSQL)
+3. Cloud storage for generated files (S3/Azure Blob)
+4. Rate limiting and API quotas
+5. Monitoring and logging
+6. Frontend application
+7. CI/CD pipeline
+8. Infrastructure validation
+
+---
+
+## API Integration (Future)
+
+### Planned FastAPI Endpoints
+```
+POST /api/v1/workflows/intelligent
+POST /api/v1/workflows/standard
+GET  /api/v1/workflows/{workflow_id}
+GET  /api/v1/workflows
+GET  /api/v1/diagrams/{workflow_id}
+GET  /api/v1/terraform/{workflow_id}
+```
+
+---
+
+## Performance Targets
+
+- Workflow execution: < 2 minutes end-to-end
+- Code generation: 600-1000 lines of Terraform
+- Diagram generation: < 30 seconds
+- Cost analysis: < 15 seconds
+- Service recommendations: < 20 seconds
+
+---
+
+## Innovation Highlights
+
+**What Makes Brahma Unique:**
+
+1. **Multi-Agent Specialization** - 4 specialized agents working together
+2. **Location-Aware Intelligence** - Automatic provider/region selection
+3. **Full Automation** - Natural language → Production-ready Terraform
+4. **Cost-First Approach** - Optimization built into every step
+5. **Production-Ready Output** - Security, monitoring, HA included
+6. **React Integration** - Mermaid diagrams for easy frontend use
+
+---
+
+## Version History
+
+**v1.0 (Current)** - October 2024
+- All core agents operational
+- Intelligent planner tool
+- Diagram generator tool
+- Terraform-only output
+- Mermaid-only diagrams
+- Production-ready for code generation
+
+---
+
+## Support & Documentation
+
+- **Project Vision:** See `PROJECT_VISION.txt` for complete details
+- **Tool Suggestions:** See tool recommendations document
+- **Issues:** Track in GitHub issues (when repository is created)
+
+---
+
+**Last Updated:** October 2024
+**Status:** Production-Ready (Code Generation)
+**Next Milestone:** Frontend Development + Deployment Orchestration

@@ -61,101 +61,101 @@ const Workflows: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className="animate-slide-up">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Workflows</h1>
-          <p className="text-gray-600">Manage and view your infrastructure workflows</p>
+          <h1 className="text-4xl font-bold text-white mb-2" style={{ fontFamily: 'Space Grotesk' }}>Workflows</h1>
+          <p className="text-gray-400">Manage and view your infrastructure workflows</p>
         </div>
         <Link
           to="/create"
-          className="bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition"
+          className="bg-blue-primary text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-dark hover:shadow-lg hover:shadow-blue-primary/40 transition-all duration-300"
         >
-          + New Workflow
+          ✨ New Workflow
         </Link>
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+        <div className="glass-card bg-red-50/90 border-2 border-red-300 text-red-700 px-6 py-4 rounded-2xl mb-6">
           {error}
         </div>
       )}
 
       {workflows.length === 0 ? (
-        <div className="bg-white rounded-lg shadow p-12 text-center">
-          <div className="text-6xl mb-4">📋</div>
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">No workflows yet</h3>
-          <p className="text-gray-600 mb-6">
+        <div className="glass-card rounded-2xl p-12 text-center border border-blue-primary/30">
+          <div className="text-7xl mb-6 animate-float">📋</div>
+          <h3 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: 'Space Grotesk' }}>No workflows yet</h3>
+          <p className="text-gray-400 mb-8 text-lg">
             Create your first infrastructure workflow to get started
           </p>
           <Link
             to="/create"
-            className="inline-block bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition"
+            className="inline-block bg-blue-primary text-white px-8 py-3 rounded-xl font-semibold hover:bg-blue-dark hover:shadow-lg hover:shadow-blue-primary/40 transition-all duration-300"
           >
-            Create Workflow
+            ✨ Create Workflow
           </Link>
         </div>
       ) : (
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+        <div className="glass-card rounded-2xl overflow-hidden border border-blue-primary/30">
+          <table className="min-w-full divide-y divide-blue-primary/20">
+            <thead className="glass">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Workflow ID
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Provider
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Region
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Services
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Savings
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Created
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="divide-y divide-blue-primary/10">
               {workflows.map((workflow) => (
-                <tr key={workflow.workflow_id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                <tr key={workflow.workflow_id} className="hover:glass transition-all">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">
                     {workflow.workflow_id.split('_').pop()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
                     {getProviderBadge(workflow.summary.cloud_provider)}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
                     {workflow.summary.region}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
                     {workflow.summary.services_count}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-semibold">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-green-400 font-semibold">
                     ${workflow.summary.estimated_savings.toFixed(2)}/mo
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
                     {getStatusBadge(workflow.success)}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
                     {new Date(workflow.timestamp).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <Link
                       to={`/workflows/${workflow.workflow_id}`}
-                      className="text-purple-600 hover:text-purple-900"
+                      className="text-blue-light hover:text-blue-primary font-semibold"
                     >
-                      View Details
+                      View →
                     </Link>
                   </td>
                 </tr>

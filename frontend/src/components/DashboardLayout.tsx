@@ -7,20 +7,20 @@ interface DashboardLayoutProps {
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen">
       <Sidebar />
       <div className="flex-1">
-        <header className="bg-white shadow-sm">
-          <div className="px-8 py-4">
+        <header className="glass-card border-b border-blue-primary/20">
+          <div className="px-8 py-5">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-gray-800">
+              <h2 className="text-xl font-semibold text-white" style={{ fontFamily: 'Space Grotesk' }}>
                 Intelligent IaC Orchestration
               </h2>
               <div className="flex items-center space-x-4">
-                <button className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900">
+                <button className="px-4 py-2 text-sm text-gray-300 hover:text-blue-light transition-colors font-medium">
                   Documentation
                 </button>
-                <div className="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center text-white font-semibold">
+                <div className="w-10 h-10 rounded-full bg-blue-primary flex items-center justify-center text-white font-semibold shadow-lg">
                   U
                 </div>
               </div>
