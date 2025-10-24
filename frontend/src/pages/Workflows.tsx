@@ -62,14 +62,14 @@ const Workflows: React.FC = () => {
 
   return (
     <div className="animate-slide-up">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 sm:mb-8">
         <div>
-          <h1 className="text-4xl font-bold text-white mb-2" style={{ fontFamily: 'Space Grotesk' }}>Workflows</h1>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2" style={{ fontFamily: 'Space Grotesk' }}>Workflows</h1>
           <p className="text-gray-400">Manage and view your infrastructure workflows</p>
         </div>
         <Link
           to="/create"
-          className="bg-blue-primary text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-dark hover:shadow-lg hover:shadow-blue-primary/40 transition-all duration-300"
+          className="inline-flex items-center justify-center bg-blue-primary text-white px-6 py-3 rounded-xl font-semibold border border-blue-primary hover:bg-blue-dark hover:shadow-lg hover:shadow-blue-primary/40 transition-all duration-300"
         >
           ✨ New Workflow
         </Link>
@@ -90,13 +90,13 @@ const Workflows: React.FC = () => {
           </p>
           <Link
             to="/create"
-            className="inline-block bg-blue-primary text-white px-8 py-3 rounded-xl font-semibold hover:bg-blue-dark hover:shadow-lg hover:shadow-blue-primary/40 transition-all duration-300"
+            className="inline-flex items-center justify-center bg-blue-primary text-white px-8 py-3 rounded-xl font-semibold border border-blue-primary hover:bg-blue-dark hover:shadow-lg hover:shadow-blue-primary/40 transition-all duration-300"
           >
             ✨ Create Workflow
           </Link>
         </div>
       ) : (
-        <div className="glass-card rounded-2xl overflow-hidden border border-blue-primary/30">
+        <div className="glass-card rounded-2xl overflow-hidden border border-blue-primary/30 overflow-x-auto">
           <table className="min-w-full divide-y divide-blue-primary/20">
             <thead className="glass">
               <tr>

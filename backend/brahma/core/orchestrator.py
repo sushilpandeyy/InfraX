@@ -6,12 +6,25 @@ Unified workflow engine that coordinates all three agents
 from typing import Dict, Any, Optional
 from datetime import datetime
 import json
+import sys
+import os
+
+# Add parent directory to path for imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 from brahma.agents.service_selection import ServiceSelectionAgent
 from brahma.agents.cost_optimization import CostOptimizationAgent
 from brahma.agents.iac_generation import IaCGenerationAgent
 from brahma.tools.intelligent_planner import IntelligentPlanner
 from brahma.tools.diagram_generator import DiagramGenerator
+
+# Database imports
+try:
+    from database import SessionLocal, WorkflowModel
+    DATABASE_ENABLED = True
+except ImportError:
+    DATABASE_ENABLED = False
+    print("⚠️  Database not available, workflows will only be stored in memory")
 
 
 class BrahmaOrchestrator:
@@ -35,6 +48,72 @@ class BrahmaOrchestrator:
         self.diagram_generator = DiagramGenerator(api_key=api_key)
 
         self.workflow_history = []
+
+    def _save_workflow_to_db(self, workflow_result: Dict[str, Any]) -> bool:
+        """
+        Save workflow result to PostgreSQL database
+
+        Args:
+            workflow_result: Complete workflow result dictionary
+
+        Returns:
+            True if saved successfully, False otherwise
+        """
+        if not DATABASE_ENABLED:
+            return False
+
+        try:
+            db = SessionLocal()
+
+            # Extract data from workflow result
+            steps = workflow_result.get("steps", {})
+            summary = workflow_result.get("summary", {})
+            input_data = workflow_result.get("input", {})
+
+            # Create database model
+            workflow_db = WorkflowModel(
+                workflow_id=workflow_result["workflow_id"],
+                success=workflow_result["success"],
+                workflow_type=workflow_result.get("workflow_type", "standard"),
+                timestamp=datetime.fromisoformat(workflow_result["timestamp"]),
+
+                # Input data
+                prompt=input_data.get("prompt", ""),
+                location=input_data.get("location"),
+                iac_tool=input_data.get("iac_tool", summary.get("iac_tool", "terraform")),
+
+                # Workflow steps
+                intelligent_planning=steps.get("1_intelligent_planning", {}),
+                cost_optimization=steps.get("2_cost_optimization", {}),
+                service_refinement=steps.get("3_service_refinement", {}),
+                iac_generation=steps.get("4_iac_generation", {}),
+                diagram_generation=steps.get("5_diagram_generation", {}),
+
+                # Summary data
+                cloud_provider=summary.get("cloud_provider", ""),
+                region=summary.get("region", ""),
+                location_rationale=summary.get("location_rationale"),
+                services_count=str(summary.get("services_count", 0)),
+                estimated_savings=str(summary.get("estimated_savings", 0)),
+                code_file=summary.get("code_file", ""),
+                code_path=summary.get("code_path", ""),
+                architecture=summary.get("architecture"),
+                mermaid_diagram=summary.get("mermaid_diagram"),
+                service_descriptions=summary.get("service_descriptions"),
+                diagram_file=summary.get("diagram_file"),
+                html_preview=summary.get("html_preview")
+            )
+
+            db.add(workflow_db)
+            db.commit()
+            db.close()
+
+            print(f"💾 Workflow saved to database: {workflow_result['workflow_id']}")
+            return True
+
+        except Exception as e:
+            print(f"⚠️  Failed to save workflow to database: {e}")
+            return False
 
     def execute_full_workflow(self, requirements: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -290,6 +369,9 @@ class BrahmaOrchestrator:
 
             # Store in history
             self.workflow_history.append(workflow_result)
+
+            # Save to database
+            self._save_workflow_to_db(workflow_result)
 
             print("\n" + "=" * 80)
             print("✅ Intelligent Brahma Workflow Completed Successfully!")

@@ -38,20 +38,20 @@ const Dashboard: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-8 animate-slide-up">
+    <div className="space-y-6 sm:space-y-8 animate-slide-up">
       {/* Welcome Section */}
-      <div className="glass-card rounded-2xl p-8 border border-blue-primary/30 shadow-2xl relative overflow-hidden">
+      <div className="glass-card rounded-2xl p-6 sm:p-8 border border-blue-primary/30 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-blue-primary/10 rounded-full blur-3xl"></div>
         <div className="relative z-10">
-          <h1 className="text-4xl font-bold mb-3 text-white" style={{ fontFamily: 'Space Grotesk' }}>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 text-white" style={{ fontFamily: 'Space Grotesk' }}>
             Welcome to InfraX Dashboard
           </h1>
-          <p className="text-gray-400 mb-6 text-lg">
+          <p className="text-gray-400 mb-6 text-base sm:text-lg">
             Create intelligent infrastructure with AI-powered orchestration
           </p>
           <Link
             to="/create"
-            className="inline-block bg-blue-primary text-white px-8 py-3 rounded-xl font-semibold hover:bg-blue-dark hover:shadow-lg hover:shadow-blue-primary/40 transition-all duration-300"
+            className="inline-flex items-center justify-center bg-blue-primary text-white px-8 py-3 rounded-xl font-semibold hover:bg-blue-dark hover:shadow-lg hover:shadow-blue-primary/40 transition-all duration-300"
           >
             ✨ Create New Workflow
           </Link>
@@ -59,7 +59,7 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {stats.map((stat, index) => (
           <div key={index} className="glass-card rounded-2xl p-6 glass-hover">
             <div className="flex items-center justify-between mb-4">
@@ -73,7 +73,7 @@ const Dashboard: React.FC = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {/* Quick Actions */}
         <div className="glass-card rounded-2xl p-6">
           <h3 className="text-lg font-semibold text-white mb-4" style={{ fontFamily: 'Space Grotesk' }}>Quick Actions</h3>
@@ -119,9 +119,9 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Features Overview */}
-      <div className="glass-card rounded-2xl p-8">
-        <h3 className="text-2xl font-bold text-white mb-6 text-center" style={{ fontFamily: 'Space Grotesk' }}>Platform Features</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="glass-card rounded-2xl p-6 sm:p-8">
+        <h3 className="text-xl sm:text-2xl font-bold text-white mb-6 text-center" style={{ fontFamily: 'Space Grotesk' }}>Platform Features</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
           <div className="text-center p-6 glass rounded-2xl glass-hover">
             <div className="text-5xl mb-4">🧠</div>
             <h4 className="font-bold text-white mb-2" style={{ fontFamily: 'Space Grotesk' }}>Intelligent Planning</h4>

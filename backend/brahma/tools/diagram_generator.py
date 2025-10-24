@@ -50,13 +50,8 @@ class DiagramGenerator:
             # Generate Mermaid diagram using GPT
             diagram_code = self._generate_mermaid_diagram(cloud_provider, services, architecture)
 
-            # Extract service descriptions for tooltips
-            service_descriptions = {}
-            for service in services:
-                service_name = service.get('service', service.get('component', 'Unknown'))
-                purpose = service.get('purpose', service.get('description', ''))
-                if purpose:
-                    service_descriptions[service_name] = purpose
+            # Generate detailed service descriptions for tooltips using AI
+            service_descriptions = self._generate_service_descriptions(services, architecture, cloud_provider)
 
             # Save diagram
             filename = self._save_diagram(diagram_code, cloud_provider)
@@ -140,6 +135,79 @@ Services:
             diagram = "\n".join(lines)
 
         return diagram
+
+    def _generate_service_descriptions(self, services: List[Dict], architecture: Dict, cloud_provider: str) -> Dict[str, str]:
+        """
+        Generate detailed service descriptions for hover tooltips
+        Explains why each service is needed and what requirement it fulfills
+        """
+        try:
+            system_prompt = """You are a cloud architecture expert explaining infrastructure decisions.
+
+For each service, provide a concise 2-3 sentence explanation covering:
+1. What requirement/need this service fulfills
+2. Why it was selected for this architecture
+3. What capacity/scale it handles
+
+Keep explanations clear, business-focused, and non-technical where possible.
+Output as JSON: {"ServiceName": "description"}"""
+
+            user_prompt = f"""Cloud Provider: {cloud_provider.upper()}
+
+Services to explain:
+"""
+            for service in services:
+                component = service.get('component', 'unknown')
+                service_name = service.get('service', 'unknown')
+                category = service.get('category', 'unknown')
+                user_prompt += f"- {component} using {service_name} ({category})\n"
+
+            user_prompt += f"\nArchitecture Context:\n"
+            user_prompt += f"- Network: {architecture.get('network_design', 'Standard VPC')}\n"
+            user_prompt += f"- Scalability: {architecture.get('scalability', 'Auto-scaling')}\n"
+            user_prompt += f"- Data Flow: {architecture.get('data_flow', '3-tier architecture')}\n"
+
+            response = openai.chat.completions.create(
+                model="gpt-4o",
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt}
+                ],
+                temperature=0.4,
+                max_tokens=1500,
+                response_format={"type": "json_object"}
+            )
+
+            import json
+            descriptions = json.loads(response.choices[0].message.content)
+
+            # Map service names to descriptions
+            service_map = {}
+            for service in services:
+                service_name = service.get('service', service.get('component', 'Unknown'))
+                # Try to find matching description
+                for key, desc in descriptions.items():
+                    if service_name.lower() in key.lower() or key.lower() in service_name.lower():
+                        service_map[service_name] = desc
+                        break
+                    # Also try component name
+                    component = service.get('component', '')
+                    if component and (component.lower() in key.lower() or key.lower() in component.lower()):
+                        service_map[component] = desc
+                        break
+
+            return service_map
+
+        except Exception as e:
+            print(f"⚠️  Failed to generate detailed descriptions: {e}")
+            # Fallback to basic descriptions
+            service_descriptions = {}
+            for service in services:
+                service_name = service.get('service', service.get('component', 'Unknown'))
+                purpose = service.get('purpose', service.get('description', ''))
+                if purpose:
+                    service_descriptions[service_name] = purpose
+            return service_descriptions
 
     def create_react_component_example(self) -> str:
         """

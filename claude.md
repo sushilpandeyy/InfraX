@@ -58,13 +58,29 @@ InfraX is an intelligent Infrastructure as Code (IaC) orchestration platform pow
 - Purpose: Creates visual architecture diagrams
 - Features:
   - Mermaid diagram generation (React-compatible)
+  - Dark glassmorphism theme matching frontend
   - Network topology visualization
   - Service relationship mapping
   - Data flow diagrams
+  - AI-generated detailed service descriptions
+  - Interactive hover tooltips with requirements
   - Interactive HTML preview
   - GitHub/GitLab compatible
 
-**6. Unified Orchestrator**
+**6. Cloud Pricing Tool** (NEW ✨)
+- Location: `backend/brahma/tools/cloud_pricing.py`
+- Purpose: Provides accurate cloud service pricing
+- Features:
+  - AI-powered pricing estimates (OpenAI GPT-4)
+  - Real-time pricing knowledge (up to Jan 2025)
+  - AWS, Azure, GCP pricing support
+  - Regional pricing variations
+  - Instance type recommendations
+  - Multi-cloud price comparison
+  - Cost breakdown by component (compute, storage, network)
+  - Optimization tips included
+
+**7. Unified Orchestrator**
 - Location: `backend/brahma/core/orchestrator.py`
 - Purpose: Coordinates all agents and tools
 - Features:
@@ -72,6 +88,7 @@ InfraX is an intelligent Infrastructure as Code (IaC) orchestration platform pow
   - Standard workflow mode (manual control)
   - 5-step automated process
   - Workflow history tracking
+  - PostgreSQL persistence
   - Complete result packaging
 
 ---
@@ -93,18 +110,38 @@ InfraX/
 │   │   ├── tools/
 │   │   │   ├── __init__.py
 │   │   │   ├── intelligent_planner.py
-│   │   │   └── diagram_generator.py
+│   │   │   ├── diagram_generator.py
+│   │   │   └── cloud_pricing.py
 │   │   ├── utils/
 │   │   │   └── __init__.py
 │   │   └── __init__.py
 │   ├── api/
-│   │   └── main.py                # FastAPI server (simplified)
+│   │   └── main.py                # FastAPI server + CORS
+│   ├── database.py                # PostgreSQL models (SQLAlchemy)
 │   ├── templates/
 │   │   └── terraform/
 │   │       └── aws_base.tf
 │   ├── requirements.txt
 │   ├── cli.py                     # Demo CLI (not active)
 │   └── .env.example
+├── frontend/                       # React + TypeScript (NEW ✨)
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── MermaidDiagram.tsx  # Dark themed diagrams
+│   │   │   ├── Sidebar.tsx
+│   │   │   └── DashboardLayout.tsx
+│   │   ├── pages/
+│   │   │   ├── Dashboard.tsx
+│   │   │   ├── CreateWorkflow.tsx
+│   │   │   ├── Workflows.tsx
+│   │   │   └── WorkflowDetails.tsx
+│   │   ├── api/
+│   │   │   └── brahma.ts          # API client
+│   │   ├── types/
+│   │   │   └── workflow.ts        # TypeScript definitions
+│   │   └── App.tsx
+│   ├── package.json
+│   └── tailwind.config.js         # Dark glassmorphism theme
 ├── data/
 │   ├── generated_code/            # Terraform files output
 │   └── diagrams/                  # Mermaid diagrams + HTML previews
@@ -118,13 +155,14 @@ InfraX/
 
 ### Backend
 - **Runtime:** Python 3.8+
-- **Framework:** FastAPI (REST API)
+- **Framework:** FastAPI (REST API) + CORS
 - **AI:** OpenAI GPT-4 (all agents and tools)
 - **IaC Output:** Terraform only
-- **Visualization:** Mermaid.js
-- **Storage:** File-based (local development)
+- **Visualization:** Mermaid.js (dark themed)
+- **Database:** PostgreSQL (Neon) with SQLAlchemy
+- **Storage:** File-based + Database persistence
 
-### Dependencies
+### Backend Dependencies
 ```
 fastapi
 uvicorn
@@ -132,13 +170,32 @@ pydantic
 openai
 python-dotenv
 requests
+sqlalchemy
+psycopg2-binary
+alembic
 ```
 
-### Future Frontend
-- **Framework:** React with TypeScript (planned)
-- **Visualization:** Mermaid React component
-- **State:** React Context API
-- **Styling:** Tailwind CSS
+### Frontend (NEW ✨)
+- **Framework:** React 19 with TypeScript
+- **Build Tool:** Vite
+- **Visualization:** Mermaid.js with dark theme
+- **Styling:** Tailwind CSS v3 (dark glassmorphism)
+- **HTTP Client:** Axios
+- **Routing:** React Router DOM
+- **Fonts:** Space Grotesk + Inter
+- **Theme:** Dark mode with glass effects
+- **Color Scheme:** Blue primary (#3b82f6), dark backgrounds
+
+### Frontend Dependencies
+```
+react, react-dom
+react-router-dom
+axios
+mermaid
+tailwindcss
+typescript
+vite
+```
 
 ---
 
@@ -238,29 +295,37 @@ Complete JSON with all step outputs including:
 
 ## Key Features
 
-### ✅ Implemented (V1.0)
+### ✅ Implemented (V1.5 - Latest)
 - Multi-agent AI system with specialized roles
 - Natural language infrastructure planning
 - Location-aware cloud provider selection
 - Automatic region optimization
 - Production-ready Terraform generation
+- **AI-powered cloud pricing estimates** ✨
+- **PostgreSQL database persistence** ✨
+- **Dark glassmorphism themed diagrams** ✨
+- **Interactive service tooltips with requirements** ✨
+- **React + TypeScript frontend** ✨
 - Cost optimization (40-60% target)
 - Security best practices built-in
-- Mermaid diagram generation
+- Mermaid diagram generation with dark theme
 - React-compatible visualizations
 - Multi-cloud support (AWS, Azure, GCP)
+- Workflow history and management UI
+- Real-time diagram rendering
+- CORS-enabled API
 
 ### ⏳ Planned (Future Versions)
 - Actual deployment orchestration
-- Real-time cloud pricing API integration
+- Live cloud pricing API integration (AWS/Azure/GCP)
 - Infrastructure validation and testing
 - Existing infrastructure migration
 - Compliance scanning (SOC2, HIPAA, PCI)
 - Multi-environment management (dev/staging/prod)
 - Disaster recovery planning
-- React frontend development
-- User authentication
-- Database persistence
+- User authentication & authorization
+- Multi-user support
+- CI/CD pipeline integration
 
 ---
 
@@ -294,34 +359,43 @@ Complete JSON with all step outputs including:
 - IaC output is Terraform only (CloudFormation/Pulumi removed for simplicity)
 - Diagram format is Mermaid only (best for React integration)
 - No actual deployment - only code generation
-- Cost estimates are AI-based, not real-time pricing
-- File-based storage (no database yet)
-- No user authentication
-- Local development only
+- Cost estimates are AI-based, not live API pricing
+- No user authentication yet
+- Single-user local development mode
 
 ### Production Considerations
 Before production deployment, add:
 1. User authentication and authorization
-2. Database for workflow persistence (PostgreSQL)
+2. ~~Database for workflow persistence (PostgreSQL)~~ ✅ IMPLEMENTED
 3. Cloud storage for generated files (S3/Azure Blob)
 4. Rate limiting and API quotas
 5. Monitoring and logging
-6. Frontend application
+6. ~~Frontend application~~ ✅ IMPLEMENTED
 7. CI/CD pipeline
 8. Infrastructure validation
+9. SSL/TLS certificates
+10. Production database (scale Neon or self-hosted PostgreSQL)
 
 ---
 
-## API Integration (Future)
+## API Endpoints (IMPLEMENTED ✅)
 
-### Planned FastAPI Endpoints
+### Active FastAPI Endpoints
 ```
-POST /api/v1/workflows/intelligent
-POST /api/v1/workflows/standard
-GET  /api/v1/workflows/{workflow_id}
-GET  /api/v1/workflows
-GET  /api/v1/diagrams/{workflow_id}
-GET  /api/v1/terraform/{workflow_id}
+GET  /                                  - Platform info
+GET  /health                            - Health check
+
+POST /api/v1/workflows/intelligent      - Create workflow with AI planning
+GET  /api/v1/workflows                  - List all workflows (from PostgreSQL)
+GET  /api/v1/workflows/{workflow_id}    - Get specific workflow
+```
+
+### Frontend URLs
+```
+http://localhost:5173/                  - Dashboard home
+http://localhost:5173/create            - Create new workflow
+http://localhost:5173/workflows         - View all workflows
+http://localhost:5173/workflows/{id}    - Workflow details with tabs
 ```
 
 ---
@@ -351,7 +425,17 @@ GET  /api/v1/terraform/{workflow_id}
 
 ## Version History
 
-**v1.0 (Current)** - October 2024
+**v1.5 (Current)** - January 2025 ✨
+- React + TypeScript frontend with dark glassmorphism theme
+- PostgreSQL database integration (Neon)
+- AI-powered cloud pricing estimates
+- Dark themed Mermaid diagrams
+- Interactive service tooltips with requirements
+- Workflow history UI
+- CORS-enabled API
+- Production-ready full-stack application
+
+**v1.0** - October 2024
 - All core agents operational
 - Intelligent planner tool
 - Diagram generator tool
@@ -364,11 +448,11 @@ GET  /api/v1/terraform/{workflow_id}
 ## Support & Documentation
 
 - **Project Vision:** See `PROJECT_VISION.txt` for complete details
-- **Tool Suggestions:** See tool recommendations document
+- **This File:** `CLAUDE.md` - Comprehensive technical documentation
 - **Issues:** Track in GitHub issues (when repository is created)
 
 ---
 
-**Last Updated:** October 2024
-**Status:** Production-Ready (Code Generation)
-**Next Milestone:** Frontend Development + Deployment Orchestration
+**Last Updated:** January 2025
+**Status:** Production-Ready (Full-Stack Application)
+**Next Milestone:** User Authentication + Deployment Orchestration + Live Cloud API Integration

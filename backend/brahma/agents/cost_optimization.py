@@ -8,6 +8,12 @@ import os
 from typing import Dict, List, Any
 from datetime import datetime
 import json
+import sys
+from pathlib import Path
+
+# Add parent directory to path for imports
+sys.path.append(str(Path(__file__).parent.parent))
+from brahma.tools.cloud_pricing import CloudPricing
 
 
 class CostOptimizationAgent:
@@ -20,6 +26,9 @@ class CostOptimizationAgent:
         self.api_key = api_key or os.getenv("OPENAI_API_KEY")
         if self.api_key:
             openai.api_key = self.api_key
+
+        # Initialize pricing tool
+        self.pricing_tool = CloudPricing(api_key=self.api_key)
 
         # Cost optimization strategies
         self.optimization_strategies = {
