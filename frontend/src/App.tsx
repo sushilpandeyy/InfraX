@@ -15,8 +15,8 @@ function App() {
           <Route path="/create" element={<CreateWorkflow />} />
           <Route path="/workflows" element={<Workflows />} />
           <Route path="/workflows/:id" element={<WorkflowDetails />} />
-          <Route path="/analytics" element={<div className="text-center py-12 text-gray-500">Analytics coming soon...</div>} />
-          <Route path="/settings" element={<div className="text-center py-12 text-gray-500">Settings coming soon...</div>} />
+          <Route path="/analytics" element={<div className="text-center py-12 text-vintage-white opacity-50">Analytics coming soon...</div>} />
+          <Route path="/settings" element={<div className="text-center py-12 text-vintage-white opacity-50">Settings coming soon...</div>} />
         </Routes>
       </DashboardLayout>
     </Router>

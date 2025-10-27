@@ -7,19 +7,20 @@ export default {
   theme: {
     extend: {
       colors: {
-        dark: {
-          bg: '#0a0e1a',
-          card: '#0f172a',
-          border: 'rgba(59, 130, 246, 0.2)',
-        },
-        blue: {
-          primary: '#3b82f6',
-          light: '#60a5fa',
-          dark: '#2563eb',
+        vintage: {
+          black: '#0a0a0a',
+          white: '#f5f5f5',
+          red: '#dc2626',
+          'red-light': '#ef4444',
+          border: '#333333',
         },
       },
-      backdropBlur: {
-        xs: '2px',
+      fontFamily: {
+        heading: ['Georgia', 'serif'],
+        mono: ['Courier New', 'monospace'],
+      },
+      borderWidth: {
+        'vintage': '2px',
       },
     },
   },

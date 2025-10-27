@@ -233,44 +233,44 @@ const CreateWorkflow: React.FC = () => {
   return (
     <div className="max-w-5xl mx-auto animate-slide-up">
       <div className="mb-6 sm:mb-8">
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2" style={{ fontFamily: 'Space Grotesk' }}>
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2" className="font-heading">
           Create New Workflow
         </h1>
-        <p className="text-gray-400">
+        <p className="text-vintage-white opacity-60">
           Configure your infrastructure with intelligent recommendations
         </p>
       </div>
 
       {/* Loading Progress Display */}
       {loading && (
-        <div className="glass-card border-2 border-blue-primary/50 px-6 py-6 rounded-2xl mb-6 animate-pulse">
+        <div className="card-vintage border-2 border-vintage/50 px-6 py-6 rounded-2xl mb-6 animate-pulse">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <svg className="animate-spin h-6 w-6 text-blue-primary" viewBox="0 0 24 24">
+              <svg className="animate-spin h-6 w-6 text-vintage-white" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
               </svg>
               <div>
-                <p className="text-white font-semibold text-lg" style={{ fontFamily: 'Space Grotesk' }}>
+                <p className="text-white font-semibold text-lg" className="font-heading">
                   Generating Infrastructure
                 </p>
-                <p className="text-gray-300 text-sm mt-1">{currentStep}</p>
+                <p className="text-vintage-white opacity-80 text-sm mt-1">{currentStep}</p>
               </div>
             </div>
-            <div className="text-blue-primary font-bold text-xl" style={{ fontFamily: 'Space Grotesk' }}>
+            <div className="text-vintage-white font-bold text-xl" className="font-heading">
               {progress}%
             </div>
           </div>
 
           {/* Progress Bar */}
-          <div className="w-full bg-dark-card rounded-full h-3 overflow-hidden border border-blue-primary/30">
+          <div className="w-full bg-vintage-black rounded-full h-3 overflow-hidden border border-vintage/30">
             <div
-              className="bg-gradient-to-r from-blue-primary to-blue-light h-full transition-all duration-500 ease-out rounded-full"
+              className="bg-gradient-to-r from-vintage-red to-vintage-white h-full transition-all duration-500 ease-out rounded-full"
               style={{ width: `${progress}%` }}
             />
           </div>
 
-          <div className="mt-4 text-xs text-gray-400">
+          <div className="mt-4 text-xs text-vintage-white opacity-60">
             <p>⏱️ This typically takes 30-60 seconds. Please don't close this page.</p>
           </div>
         </div>
@@ -278,7 +278,7 @@ const CreateWorkflow: React.FC = () => {
 
       {/* Error Display */}
       {error && (
-        <div className="glass-card bg-red-50/90 border-2 border-red-300 text-red-700 px-6 py-4 rounded-2xl mb-6">
+        <div className="card-vintage bg-vintage-black/90 border-2 border-vintage-red text-vintage-red px-6 py-4 rounded-2xl mb-6">
           <div className="flex items-start gap-3">
             <svg className="w-6 h-6 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
@@ -292,22 +292,22 @@ const CreateWorkflow: React.FC = () => {
       )}
 
       {/* Main Form */}
-      <div className="glass-card rounded-2xl p-6 sm:p-8 mb-6 border border-blue-primary/30">
+      <div className="card-vintage rounded-2xl p-6 sm:p-8 mb-6 border border-vintage/30">
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Description */}
           <div>
-            <label className="block text-white text-sm font-bold mb-2" style={{ fontFamily: 'Space Grotesk' }}>
+            <label className="block text-white text-sm font-bold mb-2" className="font-heading">
               Project Description *
             </label>
             <textarea
-              className="w-full px-4 py-3 bg-dark-card text-white border border-blue-primary/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-blue-primary transition-all"
+              className="w-full px-4 py-3 bg-vintage-black text-white border border-vintage/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-vintage transition-all"
               rows={4}
               placeholder="Describe your application (e.g., 'E-commerce platform with user authentication, product catalog, and payment processing')"
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               required
             />
-            <p className="text-xs text-gray-400 mt-2">
+            <p className="text-xs text-vintage-white opacity-60 mt-2">
               Brief description of your application and its core features
             </p>
           </div>
@@ -316,11 +316,11 @@ const CreateWorkflow: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Environment */}
             <div>
-              <label className="block text-white text-sm font-bold mb-2" style={{ fontFamily: 'Space Grotesk' }}>
+              <label className="block text-white text-sm font-bold mb-2" className="font-heading">
                 Environment *
               </label>
               <select
-                className="w-full px-4 py-3 bg-dark-card text-white border border-blue-primary/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-blue-primary transition-all cursor-pointer"
+                className="w-full px-4 py-3 bg-vintage-black text-white border border-vintage/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-vintage transition-all cursor-pointer"
                 value={environment}
                 onChange={(e) => setEnvironment(e.target.value)}
                 required
@@ -331,18 +331,18 @@ const CreateWorkflow: React.FC = () => {
                   </option>
                 ))}
               </select>
-              <p className="text-xs text-gray-400 mt-2">
+              <p className="text-xs text-vintage-white opacity-60 mt-2">
                 {environments.find(e => e.value === environment)?.description}
               </p>
             </div>
 
             {/* Workload Type */}
             <div>
-              <label className="block text-white text-sm font-bold mb-2" style={{ fontFamily: 'Space Grotesk' }}>
+              <label className="block text-white text-sm font-bold mb-2" className="font-heading">
                 Workload Type *
               </label>
               <select
-                className="w-full px-4 py-3 bg-dark-card text-white border border-blue-primary/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-blue-primary transition-all cursor-pointer"
+                className="w-full px-4 py-3 bg-vintage-black text-white border border-vintage/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-vintage transition-all cursor-pointer"
                 value={workloadType}
                 onChange={(e) => setWorkloadType(e.target.value)}
                 required
@@ -353,7 +353,7 @@ const CreateWorkflow: React.FC = () => {
                   </option>
                 ))}
               </select>
-              <p className="text-xs text-gray-400 mt-2">
+              <p className="text-xs text-vintage-white opacity-60 mt-2">
                 Type of application you're deploying
               </p>
             </div>
@@ -363,11 +363,11 @@ const CreateWorkflow: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Expected Users */}
             <div>
-              <label className="block text-white text-sm font-bold mb-2" style={{ fontFamily: 'Space Grotesk' }}>
+              <label className="block text-white text-sm font-bold mb-2" className="font-heading">
                 Expected Users *
               </label>
               <select
-                className="w-full px-4 py-3 bg-dark-card text-white border border-blue-primary/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-blue-primary transition-all cursor-pointer"
+                className="w-full px-4 py-3 bg-vintage-black text-white border border-vintage/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-vintage transition-all cursor-pointer"
                 value={expectedUsers}
                 onChange={(e) => setExpectedUsers(e.target.value)}
                 required
@@ -378,24 +378,24 @@ const CreateWorkflow: React.FC = () => {
                   </option>
                 ))}
               </select>
-              <p className="text-xs text-gray-400 mt-2">
+              <p className="text-xs text-vintage-white opacity-60 mt-2">
                 Expected number of concurrent users
               </p>
             </div>
 
             {/* Target Location */}
             <div>
-              <label className="block text-white text-sm font-bold mb-2" style={{ fontFamily: 'Space Grotesk' }}>
+              <label className="block text-white text-sm font-bold mb-2" className="font-heading">
                 Target Location (Optional)
               </label>
               <input
                 type="text"
-                className="w-full px-4 py-3 bg-dark-card text-white border border-blue-primary/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-blue-primary transition-all"
+                className="w-full px-4 py-3 bg-vintage-black text-white border border-vintage/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-vintage transition-all"
                 placeholder="e.g., India, Europe, US, Global"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
               />
-              <p className="text-xs text-gray-400 mt-2">
+              <p className="text-xs text-vintage-white opacity-60 mt-2">
                 Geographic location of your users
               </p>
             </div>
@@ -405,11 +405,11 @@ const CreateWorkflow: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Budget */}
             <div>
-              <label className="block text-white text-sm font-bold mb-2" style={{ fontFamily: 'Space Grotesk' }}>
+              <label className="block text-white text-sm font-bold mb-2" className="font-heading">
                 Monthly Budget (Optional)
               </label>
               <select
-                className="w-full px-4 py-3 bg-dark-card text-white border border-blue-primary/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-blue-primary transition-all cursor-pointer"
+                className="w-full px-4 py-3 bg-vintage-black text-white border border-vintage/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-vintage transition-all cursor-pointer"
                 value={budget}
                 onChange={(e) => setBudget(e.target.value)}
               >
@@ -419,25 +419,25 @@ const CreateWorkflow: React.FC = () => {
                   </option>
                 ))}
               </select>
-              <p className="text-xs text-gray-400 mt-2">
+              <p className="text-xs text-vintage-white opacity-60 mt-2">
                 Expected monthly cloud budget
               </p>
             </div>
 
             {/* High Availability */}
             <div>
-              <label className="block text-white text-sm font-bold mb-2" style={{ fontFamily: 'Space Grotesk' }}>
+              <label className="block text-white text-sm font-bold mb-2" className="font-heading">
                 High Availability
               </label>
               <select
-                className="w-full px-4 py-3 bg-dark-card text-white border border-blue-primary/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-blue-primary transition-all cursor-pointer"
+                className="w-full px-4 py-3 bg-vintage-black text-white border border-vintage/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-vintage transition-all cursor-pointer"
                 value={highAvailability}
                 onChange={(e) => setHighAvailability(e.target.value)}
               >
                 <option value="yes">Yes - Multi-AZ, Load Balanced</option>
                 <option value="no">No - Single instance (Dev/Test)</option>
               </select>
-              <p className="text-xs text-gray-400 mt-2">
+              <p className="text-xs text-vintage-white opacity-60 mt-2">
                 {highAvailability === 'yes' ? 'Multi-region failover, auto-scaling' : 'Cost-optimized, single instance'}
               </p>
             </div>
@@ -445,11 +445,11 @@ const CreateWorkflow: React.FC = () => {
 
           {/* Compliance */}
           <div>
-            <label className="block text-white text-sm font-bold mb-2" style={{ fontFamily: 'Space Grotesk' }}>
+            <label className="block text-white text-sm font-bold mb-2" className="font-heading">
               Compliance Requirements (Optional)
             </label>
             <select
-              className="w-full px-4 py-3 bg-dark-card text-white border border-blue-primary/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-blue-primary transition-all cursor-pointer"
+              className="w-full px-4 py-3 bg-vintage-black text-white border border-vintage/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-vintage transition-all cursor-pointer"
               value={compliance}
               onChange={(e) => setCompliance(e.target.value)}
             >
@@ -459,7 +459,7 @@ const CreateWorkflow: React.FC = () => {
                 </option>
               ))}
             </select>
-            <p className="text-xs text-gray-400 mt-2">
+            <p className="text-xs text-vintage-white opacity-60 mt-2">
               Select if your application requires specific compliance standards
             </p>
           </div>
@@ -469,7 +469,7 @@ const CreateWorkflow: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-primary text-white py-3 px-6 rounded-xl font-semibold border border-blue-primary hover:bg-blue-dark hover:shadow-lg hover:shadow-blue-primary/40 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+              className="w-full bg-vintage-red text-white py-3 px-6 rounded-xl font-semibold border border-vintage hover:bg-vintage-red/80 hover:shadow-lg hover:shadow-vintage-red/40 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
             >
               {loading ? (
                 <span className="flex items-center justify-center">
@@ -488,45 +488,45 @@ const CreateWorkflow: React.FC = () => {
       </div>
 
       {/* Quick Start Templates */}
-      <div className="glass-card rounded-2xl p-6 sm:p-8 border border-blue-primary/30">
-        <h3 className="text-xl font-bold text-white mb-4" style={{ fontFamily: 'Space Grotesk' }}>
+      <div className="card-vintage rounded-2xl p-6 sm:p-8 border border-vintage/30">
+        <h3 className="text-xl font-bold text-white mb-4" className="font-heading">
           Quick Start Templates
         </h3>
-        <p className="text-sm text-gray-400 mb-4">
+        <p className="text-sm text-vintage-white opacity-60 mb-4">
           Start with a pre-configured template
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <button
             type="button"
             onClick={() => loadQuickStart('dev-test')}
-            className="text-left p-5 glass rounded-xl glass-hover border border-blue-primary/30 hover:border-blue-primary/50 transition-all"
+            className="text-left p-5 border-vintage bg-vintage-black rounded-xl glass-hover border border-vintage/30 hover:border-vintage/50 transition-all"
           >
             <div className="text-3xl mb-3">🧪</div>
             <h4 className="font-semibold text-white mb-2">Dev/Test</h4>
-            <p className="text-xs text-gray-400 mb-2">Development environment</p>
-            <p className="text-xs text-green-400">Under $500/month</p>
+            <p className="text-xs text-vintage-white opacity-60 mb-2">Development environment</p>
+            <p className="text-xs text-vintage-white">Under $500/month</p>
           </button>
 
           <button
             type="button"
             onClick={() => loadQuickStart('small-prod')}
-            className="text-left p-5 glass rounded-xl glass-hover border border-blue-primary/30 hover:border-blue-primary/50 transition-all"
+            className="text-left p-5 border-vintage bg-vintage-black rounded-xl glass-hover border border-vintage/30 hover:border-vintage/50 transition-all"
           >
             <div className="text-3xl mb-3">🚀</div>
             <h4 className="font-semibold text-white mb-2">Small Production</h4>
-            <p className="text-xs text-gray-400 mb-2">Production-ready for SMB</p>
-            <p className="text-xs text-green-400">$500 - $2K/month</p>
+            <p className="text-xs text-vintage-white opacity-60 mb-2">Production-ready for SMB</p>
+            <p className="text-xs text-vintage-white">$500 - $2K/month</p>
           </button>
 
           <button
             type="button"
             onClick={() => loadQuickStart('enterprise')}
-            className="text-left p-5 glass rounded-xl glass-hover border border-blue-primary/30 hover:border-blue-primary/50 transition-all"
+            className="text-left p-5 border-vintage bg-vintage-black rounded-xl glass-hover border border-vintage/30 hover:border-vintage/50 transition-all"
           >
             <div className="text-3xl mb-3">🏢</div>
             <h4 className="font-semibold text-white mb-2">Enterprise</h4>
-            <p className="text-xs text-gray-400 mb-2">High-scale, compliant</p>
-            <p className="text-xs text-green-400">$10K+/month</p>
+            <p className="text-xs text-vintage-white opacity-60 mb-2">High-scale, compliant</p>
+            <p className="text-xs text-vintage-white">$10K+/month</p>
           </button>
         </div>
       </div>
