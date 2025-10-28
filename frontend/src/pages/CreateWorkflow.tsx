@@ -6,65 +6,24 @@ const CreateWorkflow: React.FC = () => {
   const navigate = useNavigate();
 
   // Form state
+  const [inputMode, setInputMode] = useState<'manual' | 'repo'>('manual');
   const [prompt, setPrompt] = useState('');
-  const [environment, setEnvironment] = useState('production');
-  const [expectedUsers, setExpectedUsers] = useState('1K-10K');
-  const [workloadType, setWorkloadType] = useState('web-application');
   const [location, setLocation] = useState('');
-  const [budget, setBudget] = useState('');
-  const [highAvailability, setHighAvailability] = useState('yes');
-  const [compliance, setCompliance] = useState('none');
+  const [repoUrl, setRepoUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState('');
   const [progress, setProgress] = useState(0);
 
-  const environments = [
-    { value: 'development', label: 'Development', description: 'Cost-optimized, minimal scaling' },
-    { value: 'staging', label: 'Staging', description: 'Production-like, limited scale' },
-    { value: 'production', label: 'Production', description: 'Full scale, high availability' },
-  ];
-
-  const userRanges = [
-    { value: '<100', label: 'Less than 100 users' },
-    { value: '100-1K', label: '100 - 1,000 users' },
-    { value: '1K-10K', label: '1,000 - 10,000 users' },
-    { value: '10K-100K', label: '10,000 - 100,000 users' },
-    { value: '100K-1M', label: '100,000 - 1M users' },
-    { value: '1M+', label: '1M+ users' },
-  ];
-
-  const workloadTypes = [
-    { value: 'web-application', label: 'Web Application' },
-    { value: 'api-service', label: 'API Service' },
-    { value: 'mobile-backend', label: 'Mobile Backend' },
-    { value: 'e-commerce', label: 'E-commerce Platform' },
-    { value: 'saas', label: 'SaaS Application' },
-    { value: 'data-processing', label: 'Data Processing' },
-    { value: 'ml-ai', label: 'ML/AI Workload' },
-    { value: 'iot', label: 'IoT Platform' },
-  ];
-
-  const budgetRanges = [
-    { value: '', label: 'Not specified' },
-    { value: '<500', label: 'Under $500/month' },
-    { value: '500-2K', label: '$500 - $2,000/month' },
-    { value: '2K-5K', label: '$2,000 - $5,000/month' },
-    { value: '5K-10K', label: '$5,000 - $10,000/month' },
-    { value: '10K+', label: '$10,000+/month' },
-  ];
-
-  const complianceOptions = [
-    { value: 'none', label: 'None' },
-    { value: 'gdpr', label: 'GDPR' },
-    { value: 'hipaa', label: 'HIPAA' },
-    { value: 'pci-dss', label: 'PCI-DSS' },
-    { value: 'soc2', label: 'SOC 2' },
-    { value: 'iso27001', label: 'ISO 27001' },
-  ];
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validation: require either prompt or repo_url
+    if (!prompt.trim() && !repoUrl.trim()) {
+      setError('[VALIDATION ERROR] Please provide either a project description or a repository URL');
+      return;
+    }
+
     setLoading(true);
     setError(null);
     setProgress(0);
@@ -73,21 +32,22 @@ const CreateWorkflow: React.FC = () => {
     const stepTimeouts: NodeJS.Timeout[] = [];
 
     try {
-      // Build enhanced prompt with structured data
-      const enhancedPrompt = buildEnhancedPrompt();
-
       // Step 1: Starting workflow
       setCurrentStep('Initializing workflow...');
       setProgress(10);
 
-      // Step 2: Intelligent planning
-      setCurrentStep('ANALYZING REQUIREMENTS AND PLANNING INFRASTRUCTURE...');
+      // Step 2: Analysis phase
+      if (repoUrl) {
+        setCurrentStep('ANALYZING REPOSITORY AND DETECTING TECH STACK...');
+      } else {
+        setCurrentStep('ANALYZING REQUIREMENTS AND PLANNING INFRASTRUCTURE...');
+      }
       setProgress(20);
 
       // Simulate progress updates for better UX
       progressInterval = setInterval(() => {
         setProgress((prev) => {
-          if (prev >= 90) return 90; // Stop at 90% until actual completion
+          if (prev >= 90) return 90;
           return prev + 5;
         });
       }, 1500);
@@ -99,8 +59,9 @@ const CreateWorkflow: React.FC = () => {
       stepTimeouts.push(setTimeout(() => setCurrentStep('CREATING ARCHITECTURE DIAGRAMS...'), 12000));
 
       const result = await brahmaApi.executeIntelligentWorkflow({
-        prompt: enhancedPrompt,
-        location: location || undefined,
+        prompt: prompt.trim() || undefined,
+        location: location.trim() || undefined,
+        repo_url: repoUrl.trim() || undefined,
       });
 
       // Clear all intervals and timeouts
@@ -137,6 +98,8 @@ const CreateWorkflow: React.FC = () => {
         errorMessage = '[TIMEOUT] Request timed out. The infrastructure generation is taking longer than expected. Please try again.';
       } else if (errorMessage.includes('OpenAI') || errorMessage.includes('API key')) {
         errorMessage = '[API ERROR] OpenAI API error. Please check your API key configuration in the backend .env file.';
+      } else if (errorMessage.includes('repository') || errorMessage.includes('repo')) {
+        errorMessage = `[REPO ERROR] ${errorMessage}`;
       }
 
       setError(errorMessage);
@@ -147,125 +110,67 @@ const CreateWorkflow: React.FC = () => {
     }
   };
 
-  const buildEnhancedPrompt = (): string => {
-    let enhancedPrompt = prompt;
-
-    // Add environment context
-    if (environment === 'development') {
-      enhancedPrompt += `\n\nEnvironment: DEVELOPMENT - Focus on cost optimization, minimal scaling, use smaller instance types. No need for multi-AZ or extensive monitoring.`;
-    } else if (environment === 'staging') {
-      enhancedPrompt += `\n\nEnvironment: STAGING - Production-like setup but with reduced capacity. Include basic monitoring and logging.`;
-    } else {
-      enhancedPrompt += `\n\nEnvironment: PRODUCTION - Full production setup with high availability, comprehensive monitoring, and proper scaling.`;
-    }
-
-    // Add scale context
-    enhancedPrompt += `\n\nExpected Users: ${expectedUsers}. Design infrastructure to handle this scale efficiently.`;
-
-    // Add workload type
-    const workload = workloadTypes.find(w => w.value === workloadType);
-    if (workload) {
-      enhancedPrompt += `\n\nWorkload Type: ${workload.label}`;
-    }
-
-    // Add HA requirements
-    if (highAvailability === 'yes' && environment === 'production') {
-      enhancedPrompt += `\n\nHigh Availability: Required - Use multi-AZ deployment, load balancing, and auto-scaling.`;
-    } else if (environment !== 'development') {
-      enhancedPrompt += `\n\nHigh Availability: Standard setup with basic redundancy.`;
-    }
-
-    // Add budget constraints
-    if (budget) {
-      enhancedPrompt += `\n\nBudget: ${budgetRanges.find(b => b.value === budget)?.label}. Optimize costs while meeting requirements.`;
-    }
-
-    // Add compliance
-    if (compliance !== 'none') {
-      const complianceLabel = complianceOptions.find(c => c.value === compliance)?.label;
-      enhancedPrompt += `\n\nCompliance: ${complianceLabel} compliance required. Ensure all security and data handling requirements are met.`;
-    }
-
-    return enhancedPrompt;
-  };
-
   const loadQuickStart = (type: string) => {
     const quickStarts: Record<string, any> = {
       'dev-test': {
-        prompt: 'Simple web application for development and testing',
-        environment: 'development',
-        expectedUsers: '<100',
-        workloadType: 'web-application',
-        budget: '<500',
-        highAvailability: 'no',
+        mode: 'manual',
+        prompt: 'Simple web application with PostgreSQL database for development and testing. Include basic monitoring and cost-optimized instances.',
+        location: '',
       },
       'small-prod': {
-        prompt: 'Production web application for a small business',
-        environment: 'production',
-        expectedUsers: '100-1K',
-        workloadType: 'web-application',
-        budget: '500-2K',
-        highAvailability: 'yes',
+        mode: 'manual',
+        prompt: 'Production web application for a small business with user authentication, database, file storage, and CDN. Need high availability and auto-scaling for up to 1000 users.',
+        location: '',
       },
       'enterprise': {
-        prompt: 'Enterprise-grade application with high traffic',
-        environment: 'production',
-        expectedUsers: '100K-1M',
-        workloadType: 'saas',
-        budget: '10K+',
-        highAvailability: 'yes',
-        compliance: 'soc2',
+        mode: 'manual',
+        prompt: 'Enterprise-grade SaaS application with microservices architecture, multiple databases (SQL and NoSQL), caching layer, message queue, and API gateway. Require SOC2 compliance, multi-region deployment, and support for 100K+ concurrent users.',
+        location: 'Global',
       },
     };
 
     const quickStart = quickStarts[type];
     if (quickStart) {
+      setInputMode(quickStart.mode);
       setPrompt(quickStart.prompt);
-      setEnvironment(quickStart.environment);
-      setExpectedUsers(quickStart.expectedUsers);
-      setWorkloadType(quickStart.workloadType);
-      setBudget(quickStart.budget);
-      setHighAvailability(quickStart.highAvailability);
-      if (quickStart.compliance) setCompliance(quickStart.compliance);
+      setLocation(quickStart.location);
+      setRepoUrl('');
     }
   };
 
   return (
     <div className="max-w-5xl mx-auto animate-slide-up">
       <div className="mb-6 sm:mb-8">
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-retro-white mb-2" className="font-heading">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-retro-white mb-2 uppercase tracking-wide">
           Create New Workflow
         </h1>
-        <p className="text-retro-cyan opacity-60">
-          Configure your infrastructure with intelligent recommendations
+        <p className="text-retro-text-dim">
+          Generate intelligent infrastructure from a description or GitHub repository
         </p>
       </div>
 
       {/* Loading Progress Display */}
       {loading && (
-        <div className="card-retro border-2 border-pixel/50 px-6 py-6 rounded-2xl mb-6 animate-pulse">
+        <div className="card-retro border-2 border-pixel/50 px-6 py-6 rounded-none mb-6 animate-pulse">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <svg className="animate-spin h-6 w-6 text-retro-cyan" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-              </svg>
+              <div className="spinner-pixel"></div>
               <div>
-                <p className="text-retro-white font-semibold text-lg" className="font-heading">
+                <p className="text-retro-white font-semibold text-lg uppercase tracking-wide">
                   Generating Infrastructure
                 </p>
-                <p className="text-retro-cyan opacity-80 text-sm mt-1">{currentStep}</p>
+                <p className="text-retro-text-dim text-sm mt-1">{currentStep}</p>
               </div>
             </div>
-            <div className="text-retro-cyan font-bold text-xl" className="font-heading">
+            <div className="text-retro-primary font-bold text-xl">
               {progress}%
             </div>
           </div>
 
           {/* Progress Bar */}
-          <div className="w-full bg-retro-dark rounded-full h-3 overflow-hidden border border-pixel/30">
+          <div className="w-full bg-retro-dark rounded-none h-3 overflow-hidden border border-pixel/30">
             <div
-              className="bg-gradient-to-r from-vintage-red to-vintage-white h-full transition-all duration-500 ease-out rounded-full"
+              className="bg-retro-primary h-full transition-all duration-500 ease-out"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -278,189 +183,114 @@ const CreateWorkflow: React.FC = () => {
 
       {/* Error Display */}
       {error && (
-        <div className="card-retro bg-retro-dark/90 border-2 border-pixel-magenta text-retro-pink px-6 py-4 rounded-2xl mb-6">
+        <div className="card-retro bg-retro-dark/90 border-2 border-retro-danger text-retro-danger px-6 py-4 rounded-none mb-6">
           <div className="flex items-start gap-3">
-            <svg className="w-6 h-6 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-            </svg>
+            <div className="text-xl font-bold">[!]</div>
             <div>
-              <p className="font-semibold">Error Generating Infrastructure</p>
-              <p className="mt-1">{error}</p>
+              <p className="font-semibold uppercase text-sm tracking-wide">Error Generating Infrastructure</p>
+              <p className="mt-1 text-sm">{error}</p>
             </div>
           </div>
         </div>
       )}
 
-      {/* Main Form */}
-      <div className="card-retro rounded-2xl p-6 sm:p-8 mb-6 border border-pixel/30">
+      {/* Input Mode Toggle */}
+      <div className="card-retro rounded-none p-6 sm:p-8 mb-6 border border-pixel/30">
+        <div className="flex gap-4 mb-6">
+          <button
+            type="button"
+            onClick={() => setInputMode('manual')}
+            className={`flex-1 px-4 py-3 rounded-none border-2 transition-all ${
+              inputMode === 'manual'
+                ? 'bg-retro-primary text-retro-bg border-retro-primary shadow-pixel font-bold'
+                : 'bg-retro-dark text-retro-text-dim border-pixel hover:border-retro-primary'
+            }`}
+          >
+            <span className="uppercase text-sm tracking-wide">Describe Project</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setInputMode('repo')}
+            className={`flex-1 px-4 py-3 rounded-none border-2 transition-all ${
+              inputMode === 'repo'
+                ? 'bg-retro-primary text-retro-bg border-retro-primary shadow-pixel font-bold'
+                : 'bg-retro-dark text-retro-text-dim border-pixel hover:border-retro-primary'
+            }`}
+          >
+            <span className="uppercase text-sm tracking-wide">Import from Repository</span>
+          </button>
+        </div>
+
+        {/* Main Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Description */}
+          {inputMode === 'manual' ? (
+            <>
+              {/* Project Description */}
+              <div>
+                <label className="block text-retro-white text-sm font-bold mb-2 uppercase tracking-wide">
+                  Project Description *
+                </label>
+                <textarea
+                  className="input-retro w-full rounded-none"
+                  rows={6}
+                  placeholder="Describe your application and requirements (e.g., 'E-commerce platform with user authentication, product catalog, payment processing, and analytics dashboard for 10K daily users')"
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                />
+                <p className="text-xs text-retro-text-dim mt-2">
+                  [TIP] Be specific about your application features, expected scale, and any compliance requirements
+                </p>
+              </div>
+            </>
+          ) : (
+            <>
+              {/* Repository URL */}
+              <div>
+                <label className="block text-retro-white text-sm font-bold mb-2 uppercase tracking-wide">
+                  GitHub/GitLab Repository URL *
+                </label>
+                <input
+                  type="url"
+                  className="input-retro w-full rounded-none"
+                  placeholder="https://github.com/username/repository"
+                  value={repoUrl}
+                  onChange={(e) => setRepoUrl(e.target.value)}
+                />
+                <p className="text-xs text-retro-text-dim mt-2">
+                  [INFO] Brahma will analyze your repository to detect tech stack and infrastructure requirements
+                </p>
+              </div>
+
+              {/* Optional description for repo mode */}
+              <div>
+                <label className="block text-retro-white text-sm font-bold mb-2 uppercase tracking-wide">
+                  Additional Context (Optional)
+                </label>
+                <textarea
+                  className="input-retro w-full rounded-none"
+                  rows={3}
+                  placeholder="Add any specific requirements not evident from the code (e.g., 'Need HIPAA compliance' or 'Expecting 50K concurrent users')"
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                />
+              </div>
+            </>
+          )}
+
+          {/* Target Location - Common for both modes */}
           <div>
-            <label className="block text-retro-white text-sm font-bold mb-2" className="font-heading">
-              Project Description *
+            <label className="block text-retro-white text-sm font-bold mb-2 uppercase tracking-wide">
+              Target Location (Optional)
             </label>
-            <textarea
-              className="w-full px-4 py-3 bg-retro-dark text-retro-white border border-pixel/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-pixel transition-all"
-              rows={4}
-              placeholder="Describe your application (e.g., 'E-commerce platform with user authentication, product catalog, and payment processing')"
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              required
+            <input
+              type="text"
+              className="input-retro w-full rounded-none"
+              placeholder="e.g., India, Europe, US, Global"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
             />
-            <p className="text-xs text-retro-cyan opacity-60 mt-2">
-              Brief description of your application and its core features
-            </p>
-          </div>
-
-          {/* Environment and Workload Type - 2 columns */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Environment */}
-            <div>
-              <label className="block text-retro-white text-sm font-bold mb-2" className="font-heading">
-                Environment *
-              </label>
-              <select
-                className="w-full px-4 py-3 bg-retro-dark text-retro-white border border-pixel/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-pixel transition-all cursor-pointer"
-                value={environment}
-                onChange={(e) => setEnvironment(e.target.value)}
-                required
-              >
-                {environments.map((env) => (
-                  <option key={env.value} value={env.value}>
-                    {env.label}
-                  </option>
-                ))}
-              </select>
-              <p className="text-xs text-retro-cyan opacity-60 mt-2">
-                {environments.find(e => e.value === environment)?.description}
-              </p>
-            </div>
-
-            {/* Workload Type */}
-            <div>
-              <label className="block text-retro-white text-sm font-bold mb-2" className="font-heading">
-                Workload Type *
-              </label>
-              <select
-                className="w-full px-4 py-3 bg-retro-dark text-retro-white border border-pixel/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-pixel transition-all cursor-pointer"
-                value={workloadType}
-                onChange={(e) => setWorkloadType(e.target.value)}
-                required
-              >
-                {workloadTypes.map((type) => (
-                  <option key={type.value} value={type.value}>
-                    {type.label}
-                  </option>
-                ))}
-              </select>
-              <p className="text-xs text-retro-cyan opacity-60 mt-2">
-                Type of application you're deploying
-              </p>
-            </div>
-          </div>
-
-          {/* Expected Users and Location - 2 columns */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Expected Users */}
-            <div>
-              <label className="block text-retro-white text-sm font-bold mb-2" className="font-heading">
-                Expected Users *
-              </label>
-              <select
-                className="w-full px-4 py-3 bg-retro-dark text-retro-white border border-pixel/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-pixel transition-all cursor-pointer"
-                value={expectedUsers}
-                onChange={(e) => setExpectedUsers(e.target.value)}
-                required
-              >
-                {userRanges.map((range) => (
-                  <option key={range.value} value={range.value}>
-                    {range.label}
-                  </option>
-                ))}
-              </select>
-              <p className="text-xs text-retro-cyan opacity-60 mt-2">
-                Expected number of concurrent users
-              </p>
-            </div>
-
-            {/* Target Location */}
-            <div>
-              <label className="block text-retro-white text-sm font-bold mb-2" className="font-heading">
-                Target Location (Optional)
-              </label>
-              <input
-                type="text"
-                className="w-full px-4 py-3 bg-retro-dark text-retro-white border border-pixel/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-pixel transition-all"
-                placeholder="e.g., India, Europe, US, Global"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-              />
-              <p className="text-xs text-retro-cyan opacity-60 mt-2">
-                Geographic location of your users
-              </p>
-            </div>
-          </div>
-
-          {/* Budget and High Availability - 2 columns */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Budget */}
-            <div>
-              <label className="block text-retro-white text-sm font-bold mb-2" className="font-heading">
-                Monthly Budget (Optional)
-              </label>
-              <select
-                className="w-full px-4 py-3 bg-retro-dark text-retro-white border border-pixel/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-pixel transition-all cursor-pointer"
-                value={budget}
-                onChange={(e) => setBudget(e.target.value)}
-              >
-                {budgetRanges.map((range) => (
-                  <option key={range.value} value={range.value}>
-                    {range.label}
-                  </option>
-                ))}
-              </select>
-              <p className="text-xs text-retro-cyan opacity-60 mt-2">
-                Expected monthly cloud budget
-              </p>
-            </div>
-
-            {/* High Availability */}
-            <div>
-              <label className="block text-retro-white text-sm font-bold mb-2" className="font-heading">
-                High Availability
-              </label>
-              <select
-                className="w-full px-4 py-3 bg-retro-dark text-retro-white border border-pixel/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-pixel transition-all cursor-pointer"
-                value={highAvailability}
-                onChange={(e) => setHighAvailability(e.target.value)}
-              >
-                <option value="yes">Yes - Multi-AZ, Load Balanced</option>
-                <option value="no">No - Single instance (Dev/Test)</option>
-              </select>
-              <p className="text-xs text-retro-cyan opacity-60 mt-2">
-                {highAvailability === 'yes' ? 'Multi-region failover, auto-scaling' : 'Cost-optimized, single instance'}
-              </p>
-            </div>
-          </div>
-
-          {/* Compliance */}
-          <div>
-            <label className="block text-retro-white text-sm font-bold mb-2" className="font-heading">
-              Compliance Requirements (Optional)
-            </label>
-            <select
-              className="w-full px-4 py-3 bg-retro-dark text-retro-white border border-pixel/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-pixel transition-all cursor-pointer"
-              value={compliance}
-              onChange={(e) => setCompliance(e.target.value)}
-            >
-              {complianceOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-            <p className="text-xs text-retro-cyan opacity-60 mt-2">
-              Select if your application requires specific compliance standards
+            <p className="text-xs text-retro-text-dim mt-2">
+              [INFO] Geographic location of your primary users for optimal region selection
             </p>
           </div>
 
@@ -473,10 +303,7 @@ const CreateWorkflow: React.FC = () => {
             >
               {loading ? (
                 <span className="flex items-center justify-center">
-                  <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                  </svg>
+                  <div className="spinner-pixel mr-3" style={{ width: '20px', height: '20px' }}></div>
                   Generating Infrastructure...
                 </span>
               ) : (
@@ -493,7 +320,7 @@ const CreateWorkflow: React.FC = () => {
           Quick Start Templates
         </h3>
         <p className="text-sm text-retro-text-dim mb-4">
-          Start with a pre-configured template
+          Start with a pre-configured template and customize as needed
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <button
@@ -502,8 +329,8 @@ const CreateWorkflow: React.FC = () => {
             className="text-left p-5 border-pixel bg-retro-dark rounded-none hover:shadow-pixel hover:border-retro-primary transition-all"
           >
             <h4 className="font-bold text-retro-primary mb-2 uppercase text-sm tracking-wider">Dev/Test</h4>
-            <p className="text-xs text-retro-text-dim mb-2">Development environment</p>
-            <p className="text-xs text-retro-text">Under $500/month</p>
+            <p className="text-xs text-retro-text-dim mb-2">Basic web app with database</p>
+            <p className="text-xs text-retro-text">Cost-optimized, single region</p>
           </button>
 
           <button
@@ -512,8 +339,8 @@ const CreateWorkflow: React.FC = () => {
             className="text-left p-5 border-pixel bg-retro-dark rounded-none hover:shadow-pixel hover:border-retro-primary transition-all"
           >
             <h4 className="font-bold text-retro-primary mb-2 uppercase text-sm tracking-wider">Small Production</h4>
-            <p className="text-xs text-retro-text-dim mb-2">Production-ready for SMB</p>
-            <p className="text-xs text-retro-text">$500 - $2K/month</p>
+            <p className="text-xs text-retro-text-dim mb-2">Full-featured with HA</p>
+            <p className="text-xs text-retro-text">Auto-scaling, up to 1K users</p>
           </button>
 
           <button
@@ -522,8 +349,8 @@ const CreateWorkflow: React.FC = () => {
             className="text-left p-5 border-pixel bg-retro-dark rounded-none hover:shadow-pixel hover:border-retro-primary transition-all"
           >
             <h4 className="font-bold text-retro-primary mb-2 uppercase text-sm tracking-wider">Enterprise</h4>
-            <p className="text-xs text-retro-text-dim mb-2">High-scale, compliant</p>
-            <p className="text-xs text-retro-text">$10K+/month</p>
+            <p className="text-xs text-retro-text-dim mb-2">Microservices, multi-region</p>
+            <p className="text-xs text-retro-text">SOC2 compliant, 100K+ users</p>
           </button>
         </div>
       </div>

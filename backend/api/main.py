@@ -14,6 +14,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from brahma.core.orchestrator import BrahmaOrchestrator
 from brahma.agents.vishu_agent import VishuAgent
+from brahma.tools.repo_analyzer import RepositoryAnalyzer
 from database import init_db, test_connection, get_db, SessionLocal, WorkflowModel, CodeVersionModel, VishuInteractionModel
 
 load_dotenv()
@@ -51,13 +52,15 @@ app.add_middleware(
     allow_headers=["*"],  # Allow all headers
 )
 
-# Initialize Brahma Orchestrator and Vishu Agent
+# Initialize Brahma Orchestrator, Vishu Agent, and Repository Analyzer
 brahma = BrahmaOrchestrator()
 vishu = VishuAgent()
+repo_analyzer = RepositoryAnalyzer()
 
 class IntelligentWorkflowRequest(BaseModel):
-    prompt: str
+    prompt: Optional[str] = None
     location: Optional[str] = None
+    repo_url: Optional[str] = None
 
 class VishuChatRequest(BaseModel):
     message: str
@@ -89,13 +92,60 @@ def health_check():
 
 @app.post("/api/v1/workflows/intelligent")
 async def create_intelligent_workflow(request: IntelligentWorkflowRequest):
-    """Execute intelligent workflow with auto-planning"""
+    """Execute intelligent workflow with auto-planning or repository analysis"""
     try:
+        # Validate that either prompt or repo_url is provided
+        if not request.prompt and not request.repo_url:
+            raise HTTPException(
+                status_code=400,
+                detail="Either 'prompt' or 'repo_url' must be provided"
+            )
+
+        final_prompt = request.prompt
+
+        # If repo_url is provided, analyze the repository
+        if request.repo_url:
+            print(f"\n[API] Repository URL provided: {request.repo_url}")
+            print("[API] Initiating repository analysis...")
+
+            repo_analysis = repo_analyzer.analyze_repository(request.repo_url)
+
+            if not repo_analysis['success']:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Repository analysis failed: {repo_analysis.get('error', 'Unknown error')}"
+                )
+
+            # Use generated prompt from repository analysis
+            generated_prompt = repo_analysis['generated_prompt']
+
+            # If user also provided a prompt, append it as additional context
+            if request.prompt and request.prompt.strip():
+                final_prompt = f"{generated_prompt}\n\nAdditional Requirements:\n{request.prompt}"
+            else:
+                final_prompt = generated_prompt
+
+            print(f"[API] Repository analysis complete. Generated prompt length: {len(final_prompt)} chars")
+            print(f"[API] Detected tech stack: {', '.join(repo_analysis['analysis'].get('tech_stack', []))}")
+
+        # Execute the workflow with the final prompt
         result = brahma.execute_intelligent_workflow(
-            prompt=request.prompt,
+            prompt=final_prompt,
             location=request.location
         )
+
+        # Add repository analysis info to the result if available
+        if request.repo_url:
+            result['repository_analysis'] = {
+                'repo_url': request.repo_url,
+                'tech_stack': repo_analysis['analysis'].get('tech_stack', []),
+                'frameworks': repo_analysis['analysis'].get('frameworks', []),
+                'databases': repo_analysis['analysis'].get('databases', []),
+            }
+
         return result
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

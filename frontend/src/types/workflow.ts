@@ -1,6 +1,7 @@
 export interface IntelligentWorkflowRequest {
-  prompt: string;
+  prompt?: string;
   location?: string;
+  repo_url?: string;
 }
 
 export interface WorkflowResult {
