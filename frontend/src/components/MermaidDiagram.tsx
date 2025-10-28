@@ -23,21 +23,21 @@ const MermaidDiagram: React.FC<MermaidDiagramProps> = ({
       securityLevel: 'loose',
       themeVariables: {
         // Vintage black/white/red theme
-        primaryColor: '#0a0a0a',          // vintage black
-        primaryTextColor: '#f5f5f5',      // vintage white
-        primaryBorderColor: '#f5f5f5',    // vintage white borders
-        lineColor: '#f5f5f5',             // white connections
+        primaryColor: '#0f0f23',          // vintage black
+        primaryTextColor: '#00FFFF',      // vintage white
+        primaryBorderColor: '#00FFFF',    // vintage white borders
+        lineColor: '#00FFFF',             // white connections
         secondaryColor: '#333333',        // dark gray
-        tertiaryColor: '#0a0a0a',         // vintage black
-        background: '#0a0a0a',            // vintage black bg
-        mainBkg: '#0a0a0a',               // vintage black card
+        tertiaryColor: '#0f0f23',         // vintage black
+        background: '#0f0f23',            // vintage black bg
+        mainBkg: '#0f0f23',               // vintage black card
         secondBkg: '#1a1a1a',             // slightly lighter black
-        nodeBorder: '#f5f5f5',            // white borders
-        clusterBkg: '#0a0a0a',            // black cluster background
-        clusterBorder: '#f5f5f5',         // white cluster border
-        edgeLabelBackground: '#0a0a0a',   // black label background
-        labelTextColor: '#f5f5f5',        // white text
-        textColor: '#f5f5f5',             // white text
+        nodeBorder: '#00FFFF',            // white borders
+        clusterBkg: '#0f0f23',            // black cluster background
+        clusterBorder: '#00FFFF',         // white cluster border
+        edgeLabelBackground: '#0f0f23',   // black label background
+        labelTextColor: '#00FFFF',        // white text
+        textColor: '#00FFFF',             // white text
         fontSize: '14px',
         fontFamily: 'Georgia, "Courier New", monospace',
       },
@@ -59,7 +59,7 @@ const MermaidDiagram: React.FC<MermaidDiagramProps> = ({
           setSvg(renderedSvg);
         } catch (error) {
           console.error('Mermaid rendering error:', error);
-          setSvg('<p class="text-vintage-red">Failed to render diagram</p>');
+          setSvg('<p class="text-retro-pink">Failed to render diagram</p>');
         }
       }
     };
@@ -138,8 +138,8 @@ const MermaidDiagram: React.FC<MermaidDiagramProps> = ({
             const rect_element = nodeElement.querySelector('rect, circle, polygon, path');
             if (rect_element) {
               rect_element.setAttribute('data-original-style', rect_element.getAttribute('style') || '');
-              const currentFill = rect_element.getAttribute('fill') || '#0a0a0a';
-              rect_element.setAttribute('style', `filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.8)); fill: ${currentFill}; stroke: #dc2626; stroke-width: 2px; transition: all 0.2s ease;`);
+              const currentFill = rect_element.getAttribute('fill') || '#0f0f23';
+              rect_element.setAttribute('style', `filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.8)); fill: ${currentFill}; stroke: #FF00FF; stroke-width: 2px; transition: all 0.2s ease;`);
             }
           });
 
@@ -176,13 +176,13 @@ const MermaidDiagram: React.FC<MermaidDiagramProps> = ({
       />
       {tooltip && (
         <div
-          className="absolute z-50 px-5 py-4 shadow-2xl text-sm max-w-md pointer-events-none border-vintage bg-vintage-black animate-fade-in font-mono"
+          className="absolute z-50 px-5 py-4 shadow-2xl text-sm max-w-md pointer-events-none border-pixel bg-retro-dark animate-fade-in font-mono"
           style={{
             left: `${tooltip.x}px`,
             top: `${tooltip.y}px`,
             transform: 'translate(-50%, -100%)',
-            background: '#0a0a0a',
-            border: '2px solid #f5f5f5',
+            background: '#0f0f23',
+            border: '2px solid #00FFFF',
             boxShadow: '0 0 20px rgba(220, 38, 38, 0.3)',
             animation: 'fadeIn 0.2s ease-out',
           }}
@@ -190,17 +190,17 @@ const MermaidDiagram: React.FC<MermaidDiagramProps> = ({
           <div
             className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 rotate-45 w-3 h-3"
             style={{
-              background: '#0a0a0a',
-              border: '2px solid #f5f5f5',
+              background: '#0f0f23',
+              border: '2px solid #00FFFF',
               borderTop: 'none',
               borderLeft: 'none',
             }}
           />
-          <div className="text-vintage-white font-bold mb-2 text-xs uppercase tracking-wider flex items-center gap-2 font-heading">
+          <div className="text-retro-cyan font-bold mb-2 text-xs uppercase tracking-wider flex items-center gap-2 font-heading">
             <span className="text-base">ℹ️</span>
             SERVICE PURPOSE
           </div>
-          <div className="text-vintage-white leading-relaxed">{tooltip.text}</div>
+          <div className="text-retro-cyan leading-relaxed">{tooltip.text}</div>
         </div>
       )}
     </div>

@@ -35,14 +35,14 @@ const CreateWorkflow: React.FC = () => {
   ];
 
   const workloadTypes = [
-    { value: 'web-application', label: 'Web Application', icon: '🌐' },
-    { value: 'api-service', label: 'API Service', icon: '🔌' },
-    { value: 'mobile-backend', label: 'Mobile Backend', icon: '📱' },
-    { value: 'e-commerce', label: 'E-commerce Platform', icon: '🛒' },
-    { value: 'saas', label: 'SaaS Application', icon: '☁️' },
-    { value: 'data-processing', label: 'Data Processing', icon: '⚙️' },
-    { value: 'ml-ai', label: 'ML/AI Workload', icon: '🤖' },
-    { value: 'iot', label: 'IoT Platform', icon: '📡' },
+    { value: 'web-application', label: 'Web Application' },
+    { value: 'api-service', label: 'API Service' },
+    { value: 'mobile-backend', label: 'Mobile Backend' },
+    { value: 'e-commerce', label: 'E-commerce Platform' },
+    { value: 'saas', label: 'SaaS Application' },
+    { value: 'data-processing', label: 'Data Processing' },
+    { value: 'ml-ai', label: 'ML/AI Workload' },
+    { value: 'iot', label: 'IoT Platform' },
   ];
 
   const budgetRanges = [
@@ -81,7 +81,7 @@ const CreateWorkflow: React.FC = () => {
       setProgress(10);
 
       // Step 2: Intelligent planning
-      setCurrentStep('🧠 Analyzing requirements and planning infrastructure...');
+      setCurrentStep('ANALYZING REQUIREMENTS AND PLANNING INFRASTRUCTURE...');
       setProgress(20);
 
       // Simulate progress updates for better UX
@@ -93,10 +93,10 @@ const CreateWorkflow: React.FC = () => {
       }, 1500);
 
       // Update step descriptions during execution
-      stepTimeouts.push(setTimeout(() => setCurrentStep('💰 Optimizing costs and resource allocation...'), 3000));
-      stepTimeouts.push(setTimeout(() => setCurrentStep('📋 Selecting optimal cloud services...'), 6000));
-      stepTimeouts.push(setTimeout(() => setCurrentStep('🏗️ Generating production-ready Terraform code...'), 9000));
-      stepTimeouts.push(setTimeout(() => setCurrentStep('🎨 Creating architecture diagrams...'), 12000));
+      stepTimeouts.push(setTimeout(() => setCurrentStep('OPTIMIZING COSTS AND RESOURCE ALLOCATION...'), 3000));
+      stepTimeouts.push(setTimeout(() => setCurrentStep('SELECTING OPTIMAL CLOUD SERVICES...'), 6000));
+      stepTimeouts.push(setTimeout(() => setCurrentStep('GENERATING PRODUCTION-READY TERRAFORM CODE...'), 9000));
+      stepTimeouts.push(setTimeout(() => setCurrentStep('CREATING ARCHITECTURE DIAGRAMS...'), 12000));
 
       const result = await brahmaApi.executeIntelligentWorkflow({
         prompt: enhancedPrompt,
@@ -108,7 +108,7 @@ const CreateWorkflow: React.FC = () => {
       stepTimeouts.forEach(timeout => clearTimeout(timeout));
 
       // Completion
-      setCurrentStep('✅ Workflow completed successfully!');
+      setCurrentStep('WORKFLOW COMPLETED SUCCESSFULLY!');
       setProgress(100);
 
       // Navigate after a brief delay
@@ -132,11 +132,11 @@ const CreateWorkflow: React.FC = () => {
 
       // Add helpful context based on error type
       if (errorMessage.includes('Network Error') || errorMessage.includes('ECONNREFUSED')) {
-        errorMessage = '⚠️ Cannot connect to backend server. Please ensure the API is running on http://localhost:8000';
+        errorMessage = '[ERROR] Cannot connect to backend server. Please ensure the API is running on http://localhost:8000';
       } else if (errorMessage.includes('timeout')) {
-        errorMessage = '⏱️ Request timed out. The infrastructure generation is taking longer than expected. Please try again.';
+        errorMessage = '[TIMEOUT] Request timed out. The infrastructure generation is taking longer than expected. Please try again.';
       } else if (errorMessage.includes('OpenAI') || errorMessage.includes('API key')) {
-        errorMessage = '🔑 OpenAI API error. Please check your API key configuration in the backend .env file.';
+        errorMessage = '[API ERROR] OpenAI API error. Please check your API key configuration in the backend .env file.';
       }
 
       setError(errorMessage);
@@ -233,52 +233,52 @@ const CreateWorkflow: React.FC = () => {
   return (
     <div className="max-w-5xl mx-auto animate-slide-up">
       <div className="mb-6 sm:mb-8">
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2" className="font-heading">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-retro-white mb-2" className="font-heading">
           Create New Workflow
         </h1>
-        <p className="text-vintage-white opacity-60">
+        <p className="text-retro-cyan opacity-60">
           Configure your infrastructure with intelligent recommendations
         </p>
       </div>
 
       {/* Loading Progress Display */}
       {loading && (
-        <div className="card-vintage border-2 border-vintage/50 px-6 py-6 rounded-2xl mb-6 animate-pulse">
+        <div className="card-retro border-2 border-pixel/50 px-6 py-6 rounded-2xl mb-6 animate-pulse">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <svg className="animate-spin h-6 w-6 text-vintage-white" viewBox="0 0 24 24">
+              <svg className="animate-spin h-6 w-6 text-retro-cyan" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
               </svg>
               <div>
-                <p className="text-white font-semibold text-lg" className="font-heading">
+                <p className="text-retro-white font-semibold text-lg" className="font-heading">
                   Generating Infrastructure
                 </p>
-                <p className="text-vintage-white opacity-80 text-sm mt-1">{currentStep}</p>
+                <p className="text-retro-cyan opacity-80 text-sm mt-1">{currentStep}</p>
               </div>
             </div>
-            <div className="text-vintage-white font-bold text-xl" className="font-heading">
+            <div className="text-retro-cyan font-bold text-xl" className="font-heading">
               {progress}%
             </div>
           </div>
 
           {/* Progress Bar */}
-          <div className="w-full bg-vintage-black rounded-full h-3 overflow-hidden border border-vintage/30">
+          <div className="w-full bg-retro-dark rounded-full h-3 overflow-hidden border border-pixel/30">
             <div
               className="bg-gradient-to-r from-vintage-red to-vintage-white h-full transition-all duration-500 ease-out rounded-full"
               style={{ width: `${progress}%` }}
             />
           </div>
 
-          <div className="mt-4 text-xs text-vintage-white opacity-60">
-            <p>⏱️ This typically takes 30-60 seconds. Please don't close this page.</p>
+          <div className="mt-4 text-xs text-retro-text-dim">
+            <p>[INFO] This typically takes 30-60 seconds. Please don't close this page.</p>
           </div>
         </div>
       )}
 
       {/* Error Display */}
       {error && (
-        <div className="card-vintage bg-vintage-black/90 border-2 border-vintage-red text-vintage-red px-6 py-4 rounded-2xl mb-6">
+        <div className="card-retro bg-retro-dark/90 border-2 border-pixel-magenta text-retro-pink px-6 py-4 rounded-2xl mb-6">
           <div className="flex items-start gap-3">
             <svg className="w-6 h-6 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
@@ -292,22 +292,22 @@ const CreateWorkflow: React.FC = () => {
       )}
 
       {/* Main Form */}
-      <div className="card-vintage rounded-2xl p-6 sm:p-8 mb-6 border border-vintage/30">
+      <div className="card-retro rounded-2xl p-6 sm:p-8 mb-6 border border-pixel/30">
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Description */}
           <div>
-            <label className="block text-white text-sm font-bold mb-2" className="font-heading">
+            <label className="block text-retro-white text-sm font-bold mb-2" className="font-heading">
               Project Description *
             </label>
             <textarea
-              className="w-full px-4 py-3 bg-vintage-black text-white border border-vintage/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-vintage transition-all"
+              className="w-full px-4 py-3 bg-retro-dark text-retro-white border border-pixel/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-pixel transition-all"
               rows={4}
               placeholder="Describe your application (e.g., 'E-commerce platform with user authentication, product catalog, and payment processing')"
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               required
             />
-            <p className="text-xs text-vintage-white opacity-60 mt-2">
+            <p className="text-xs text-retro-cyan opacity-60 mt-2">
               Brief description of your application and its core features
             </p>
           </div>
@@ -316,11 +316,11 @@ const CreateWorkflow: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Environment */}
             <div>
-              <label className="block text-white text-sm font-bold mb-2" className="font-heading">
+              <label className="block text-retro-white text-sm font-bold mb-2" className="font-heading">
                 Environment *
               </label>
               <select
-                className="w-full px-4 py-3 bg-vintage-black text-white border border-vintage/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-vintage transition-all cursor-pointer"
+                className="w-full px-4 py-3 bg-retro-dark text-retro-white border border-pixel/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-pixel transition-all cursor-pointer"
                 value={environment}
                 onChange={(e) => setEnvironment(e.target.value)}
                 required
@@ -331,29 +331,29 @@ const CreateWorkflow: React.FC = () => {
                   </option>
                 ))}
               </select>
-              <p className="text-xs text-vintage-white opacity-60 mt-2">
+              <p className="text-xs text-retro-cyan opacity-60 mt-2">
                 {environments.find(e => e.value === environment)?.description}
               </p>
             </div>
 
             {/* Workload Type */}
             <div>
-              <label className="block text-white text-sm font-bold mb-2" className="font-heading">
+              <label className="block text-retro-white text-sm font-bold mb-2" className="font-heading">
                 Workload Type *
               </label>
               <select
-                className="w-full px-4 py-3 bg-vintage-black text-white border border-vintage/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-vintage transition-all cursor-pointer"
+                className="w-full px-4 py-3 bg-retro-dark text-retro-white border border-pixel/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-pixel transition-all cursor-pointer"
                 value={workloadType}
                 onChange={(e) => setWorkloadType(e.target.value)}
                 required
               >
                 {workloadTypes.map((type) => (
                   <option key={type.value} value={type.value}>
-                    {type.icon} {type.label}
+                    {type.label}
                   </option>
                 ))}
               </select>
-              <p className="text-xs text-vintage-white opacity-60 mt-2">
+              <p className="text-xs text-retro-cyan opacity-60 mt-2">
                 Type of application you're deploying
               </p>
             </div>
@@ -363,11 +363,11 @@ const CreateWorkflow: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Expected Users */}
             <div>
-              <label className="block text-white text-sm font-bold mb-2" className="font-heading">
+              <label className="block text-retro-white text-sm font-bold mb-2" className="font-heading">
                 Expected Users *
               </label>
               <select
-                className="w-full px-4 py-3 bg-vintage-black text-white border border-vintage/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-vintage transition-all cursor-pointer"
+                className="w-full px-4 py-3 bg-retro-dark text-retro-white border border-pixel/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-pixel transition-all cursor-pointer"
                 value={expectedUsers}
                 onChange={(e) => setExpectedUsers(e.target.value)}
                 required
@@ -378,24 +378,24 @@ const CreateWorkflow: React.FC = () => {
                   </option>
                 ))}
               </select>
-              <p className="text-xs text-vintage-white opacity-60 mt-2">
+              <p className="text-xs text-retro-cyan opacity-60 mt-2">
                 Expected number of concurrent users
               </p>
             </div>
 
             {/* Target Location */}
             <div>
-              <label className="block text-white text-sm font-bold mb-2" className="font-heading">
+              <label className="block text-retro-white text-sm font-bold mb-2" className="font-heading">
                 Target Location (Optional)
               </label>
               <input
                 type="text"
-                className="w-full px-4 py-3 bg-vintage-black text-white border border-vintage/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-vintage transition-all"
+                className="w-full px-4 py-3 bg-retro-dark text-retro-white border border-pixel/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-pixel transition-all"
                 placeholder="e.g., India, Europe, US, Global"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
               />
-              <p className="text-xs text-vintage-white opacity-60 mt-2">
+              <p className="text-xs text-retro-cyan opacity-60 mt-2">
                 Geographic location of your users
               </p>
             </div>
@@ -405,11 +405,11 @@ const CreateWorkflow: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Budget */}
             <div>
-              <label className="block text-white text-sm font-bold mb-2" className="font-heading">
+              <label className="block text-retro-white text-sm font-bold mb-2" className="font-heading">
                 Monthly Budget (Optional)
               </label>
               <select
-                className="w-full px-4 py-3 bg-vintage-black text-white border border-vintage/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-vintage transition-all cursor-pointer"
+                className="w-full px-4 py-3 bg-retro-dark text-retro-white border border-pixel/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-pixel transition-all cursor-pointer"
                 value={budget}
                 onChange={(e) => setBudget(e.target.value)}
               >
@@ -419,25 +419,25 @@ const CreateWorkflow: React.FC = () => {
                   </option>
                 ))}
               </select>
-              <p className="text-xs text-vintage-white opacity-60 mt-2">
+              <p className="text-xs text-retro-cyan opacity-60 mt-2">
                 Expected monthly cloud budget
               </p>
             </div>
 
             {/* High Availability */}
             <div>
-              <label className="block text-white text-sm font-bold mb-2" className="font-heading">
+              <label className="block text-retro-white text-sm font-bold mb-2" className="font-heading">
                 High Availability
               </label>
               <select
-                className="w-full px-4 py-3 bg-vintage-black text-white border border-vintage/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-vintage transition-all cursor-pointer"
+                className="w-full px-4 py-3 bg-retro-dark text-retro-white border border-pixel/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-pixel transition-all cursor-pointer"
                 value={highAvailability}
                 onChange={(e) => setHighAvailability(e.target.value)}
               >
                 <option value="yes">Yes - Multi-AZ, Load Balanced</option>
                 <option value="no">No - Single instance (Dev/Test)</option>
               </select>
-              <p className="text-xs text-vintage-white opacity-60 mt-2">
+              <p className="text-xs text-retro-cyan opacity-60 mt-2">
                 {highAvailability === 'yes' ? 'Multi-region failover, auto-scaling' : 'Cost-optimized, single instance'}
               </p>
             </div>
@@ -445,11 +445,11 @@ const CreateWorkflow: React.FC = () => {
 
           {/* Compliance */}
           <div>
-            <label className="block text-white text-sm font-bold mb-2" className="font-heading">
+            <label className="block text-retro-white text-sm font-bold mb-2" className="font-heading">
               Compliance Requirements (Optional)
             </label>
             <select
-              className="w-full px-4 py-3 bg-vintage-black text-white border border-vintage/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-vintage transition-all cursor-pointer"
+              className="w-full px-4 py-3 bg-retro-dark text-retro-white border border-pixel/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-pixel transition-all cursor-pointer"
               value={compliance}
               onChange={(e) => setCompliance(e.target.value)}
             >
@@ -459,7 +459,7 @@ const CreateWorkflow: React.FC = () => {
                 </option>
               ))}
             </select>
-            <p className="text-xs text-vintage-white opacity-60 mt-2">
+            <p className="text-xs text-retro-cyan opacity-60 mt-2">
               Select if your application requires specific compliance standards
             </p>
           </div>
@@ -469,7 +469,7 @@ const CreateWorkflow: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-vintage-red text-white py-3 px-6 rounded-xl font-semibold border border-vintage hover:bg-vintage-red/80 hover:shadow-lg hover:shadow-vintage-red/40 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+              className="btn-retro w-full disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <span className="flex items-center justify-center">
@@ -480,7 +480,7 @@ const CreateWorkflow: React.FC = () => {
                   Generating Infrastructure...
                 </span>
               ) : (
-                '✨ Generate Infrastructure'
+                'Generate Infrastructure'
               )}
             </button>
           </div>
@@ -488,45 +488,42 @@ const CreateWorkflow: React.FC = () => {
       </div>
 
       {/* Quick Start Templates */}
-      <div className="card-vintage rounded-2xl p-6 sm:p-8 border border-vintage/30">
-        <h3 className="text-xl font-bold text-white mb-4" className="font-heading">
+      <div className="card-retro rounded-none p-6 sm:p-8 border border-pixel/30">
+        <h3 className="text-xl font-bold text-retro-white mb-4 uppercase tracking-wide">
           Quick Start Templates
         </h3>
-        <p className="text-sm text-vintage-white opacity-60 mb-4">
+        <p className="text-sm text-retro-text-dim mb-4">
           Start with a pre-configured template
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <button
             type="button"
             onClick={() => loadQuickStart('dev-test')}
-            className="text-left p-5 border-vintage bg-vintage-black rounded-xl glass-hover border border-vintage/30 hover:border-vintage/50 transition-all"
+            className="text-left p-5 border-pixel bg-retro-dark rounded-none hover:shadow-pixel hover:border-retro-primary transition-all"
           >
-            <div className="text-3xl mb-3">🧪</div>
-            <h4 className="font-semibold text-white mb-2">Dev/Test</h4>
-            <p className="text-xs text-vintage-white opacity-60 mb-2">Development environment</p>
-            <p className="text-xs text-vintage-white">Under $500/month</p>
+            <h4 className="font-bold text-retro-primary mb-2 uppercase text-sm tracking-wider">Dev/Test</h4>
+            <p className="text-xs text-retro-text-dim mb-2">Development environment</p>
+            <p className="text-xs text-retro-text">Under $500/month</p>
           </button>
 
           <button
             type="button"
             onClick={() => loadQuickStart('small-prod')}
-            className="text-left p-5 border-vintage bg-vintage-black rounded-xl glass-hover border border-vintage/30 hover:border-vintage/50 transition-all"
+            className="text-left p-5 border-pixel bg-retro-dark rounded-none hover:shadow-pixel hover:border-retro-primary transition-all"
           >
-            <div className="text-3xl mb-3">🚀</div>
-            <h4 className="font-semibold text-white mb-2">Small Production</h4>
-            <p className="text-xs text-vintage-white opacity-60 mb-2">Production-ready for SMB</p>
-            <p className="text-xs text-vintage-white">$500 - $2K/month</p>
+            <h4 className="font-bold text-retro-primary mb-2 uppercase text-sm tracking-wider">Small Production</h4>
+            <p className="text-xs text-retro-text-dim mb-2">Production-ready for SMB</p>
+            <p className="text-xs text-retro-text">$500 - $2K/month</p>
           </button>
 
           <button
             type="button"
             onClick={() => loadQuickStart('enterprise')}
-            className="text-left p-5 border-vintage bg-vintage-black rounded-xl glass-hover border border-vintage/30 hover:border-vintage/50 transition-all"
+            className="text-left p-5 border-pixel bg-retro-dark rounded-none hover:shadow-pixel hover:border-retro-primary transition-all"
           >
-            <div className="text-3xl mb-3">🏢</div>
-            <h4 className="font-semibold text-white mb-2">Enterprise</h4>
-            <p className="text-xs text-vintage-white opacity-60 mb-2">High-scale, compliant</p>
-            <p className="text-xs text-vintage-white">$10K+/month</p>
+            <h4 className="font-bold text-retro-primary mb-2 uppercase text-sm tracking-wider">Enterprise</h4>
+            <p className="text-xs text-retro-text-dim mb-2">High-scale, compliant</p>
+            <p className="text-xs text-retro-text">$10K+/month</p>
           </button>
         </div>
       </div>

@@ -226,14 +226,14 @@ const TerraformEditor: React.FC<TerraformEditorProps> = ({
   return (
     <div className={`flex flex-col h-full ${className}`}>
       {/* Toolbar */}
-      <div className="card-vintage border-b border-vintage/30 px-6 py-4 rounded-t-2xl">
+      <div className="card-retro border-b border-pixel/30 px-6 py-4 rounded-t-2xl">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center gap-2">
-            <span className="text-lg font-bold text-white" className="font-heading">
+            <span className="text-lg font-bold text-retro-white" className="font-heading">
               💻 Terraform Editor
             </span>
             {hasChanges && (
-              <span className="text-xs px-2 py-1 bg-vintage-red/20 border border-yellow-500/30 rounded text-vintage-white">
+              <span className="text-xs px-2 py-1 bg-retro-cyan/20 border border-pixel500/30 rounded text-retro-cyan">
                 Unsaved Changes
               </span>
             )}
@@ -243,7 +243,7 @@ const TerraformEditor: React.FC<TerraformEditorProps> = ({
             <button
               onClick={handleValidate}
               disabled={validating}
-              className="text-xs px-3 py-2 rounded-lg border-vintage bg-vintage-black border border-vintage/30 text-vintage-white hover:bg-vintage-black border-vintage/20 transition-all disabled:opacity-50"
+              className="text-xs px-3 py-2 rounded-lg border-pixel bg-retro-dark border border-pixel/30 text-retro-cyan hover:bg-retro-dark border-pixel/20 transition-all disabled:opacity-50"
               title="Validate Terraform syntax"
             >
               {validating ? '⏳ Validating...' : '✅ Validate'}
@@ -251,7 +251,7 @@ const TerraformEditor: React.FC<TerraformEditorProps> = ({
             <button
               onClick={handleFormat}
               disabled={formatting}
-              className="text-xs px-3 py-2 rounded-lg border-vintage bg-vintage-black border border-vintage/30 text-vintage-white hover:bg-vintage-black/20 transition-all disabled:opacity-50"
+              className="text-xs px-3 py-2 rounded-lg border-pixel bg-retro-dark border border-pixel/30 text-retro-cyan hover:bg-retro-dark/20 transition-all disabled:opacity-50"
               title="Auto-format code"
             >
               {formatting ? '⏳ Formatting...' : '🎨 Format'}
@@ -259,7 +259,7 @@ const TerraformEditor: React.FC<TerraformEditorProps> = ({
             <button
               onClick={handleSecurityScan}
               disabled={scanning}
-              className="text-xs px-3 py-2 rounded-lg border-vintage bg-vintage-black border border-yellow-500/30 text-vintage-white hover:bg-vintage-red/20 transition-all disabled:opacity-50"
+              className="text-xs px-3 py-2 rounded-lg border-pixel bg-retro-dark border border-pixel500/30 text-retro-cyan hover:bg-retro-cyan/20 transition-all disabled:opacity-50"
               title="Security scan"
             >
               {scanning ? '⏳ Scanning...' : '🔒 Security'}
@@ -267,28 +267,28 @@ const TerraformEditor: React.FC<TerraformEditorProps> = ({
             <button
               onClick={handleAudit}
               disabled={auditing}
-              className="text-xs px-3 py-2 rounded-lg border-vintage bg-vintage-black border border-vintage/30 text-vintage-white hover:bg-vintage-black border-vintage/20 transition-all disabled:opacity-50"
+              className="text-xs px-3 py-2 rounded-lg border-pixel bg-retro-dark border border-pixel/30 text-retro-cyan hover:bg-retro-dark border-pixel/20 transition-all disabled:opacity-50"
               title="Comprehensive audit"
             >
               {auditing ? '⏳ Auditing...' : '📊 Audit'}
             </button>
             <button
               onClick={loadVersions}
-              className="text-xs px-3 py-2 rounded-lg border-vintage bg-vintage-black border border-vintage/30 text-vintage-white opacity-80 hover:bg-vintage-red/20 transition-all"
+              className="text-xs px-3 py-2 rounded-lg border-pixel bg-retro-dark border border-pixel/30 text-retro-cyan opacity-80 hover:bg-retro-cyan/20 transition-all"
             >
               📜 History
             </button>
             <button
               onClick={handleReset}
               disabled={!hasChanges || saving}
-              className="text-xs px-3 py-2 rounded-lg border-vintage bg-vintage-black border border-red-500/30 text-red-400 hover:bg-vintage-black0/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="text-xs px-3 py-2 rounded-lg border-pixel bg-retro-dark border border-red-500/30 text-red-400 hover:bg-retro-dark0/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               ↺ Reset
             </button>
             <button
               onClick={handleSave}
               disabled={!hasChanges || saving}
-              className="text-xs px-4 py-2 rounded-lg bg-vintage-red hover:bg-vintage-red/80 text-white font-semibold transition-all disabled:bg-vintage-black/50 disabled:cursor-not-allowed"
+              className="text-xs px-4 py-2 rounded-lg bg-retro-cyan hover:bg-retro-cyan/80 text-retro-white font-semibold transition-all disabled:bg-retro-dark/50 disabled:cursor-not-allowed"
             >
               {saving ? '💾 Saving...' : '💾 Save Changes'}
             </button>
@@ -302,28 +302,28 @@ const TerraformEditor: React.FC<TerraformEditorProps> = ({
           <textarea
             value={code}
             onChange={(e) => setCode(e.target.value)}
-            className="flex-1 p-6 bg-gray-900/50 text-vintage-white font-mono text-sm leading-relaxed focus:outline-none resize-none border-r border-vintage/20"
+            className="flex-1 p-6 bg-retro-dark900/50 text-retro-cyan font-mono text-sm leading-relaxed focus:outline-none resize-none border-r border-pixel/20"
             style={{ fontFamily: 'Monaco, Consolas, monospace' }}
             spellCheck={false}
           />
 
-          <div className="card-vintage border-t border-vintage/20 px-4 py-2 text-xs text-vintage-white opacity-60 flex items-center justify-between">
+          <div className="card-retro border-t border-pixel/20 px-4 py-2 text-xs text-retro-cyan opacity-60 flex items-center justify-between">
             <span>{code.split('\n').length} lines • {code.length} characters</span>
             <span>Terraform (.tf)</span>
           </div>
         </div>
 
         {/* Vishu Suggestions Panel */}
-        <div className="w-96 card-vintage border-l border-vintage/30 flex flex-col overflow-hidden">
-          <div className="px-4 py-3 border-b border-vintage/20">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2" className="font-heading">
+        <div className="w-96 card-retro border-l border-pixel/30 flex flex-col overflow-hidden">
+          <div className="px-4 py-3 border-b border-pixel/20">
+            <h3 className="text-sm font-bold text-retro-white flex items-center gap-2" className="font-heading">
               <span>🤖</span>
               Vishu Suggestions
             </h3>
           </div>
 
-          <div className="p-4 border-b border-vintage/20">
-            <p className="text-xs text-vintage-white opacity-60 mb-3">Focus Area:</p>
+          <div className="p-4 border-b border-pixel/20">
+            <p className="text-xs text-retro-cyan opacity-60 mb-3">Focus Area:</p>
             <div className="grid grid-cols-2 gap-2">
               {['all', 'security', 'cost', 'performance'].map((area) => (
                 <button
@@ -332,8 +332,8 @@ const TerraformEditor: React.FC<TerraformEditorProps> = ({
                   disabled={loadingSuggestions}
                   className={`text-xs px-3 py-2 rounded-lg border transition-all ${
                     selectedFocusArea === area
-                      ? 'bg-vintage-red/20 border-vintage/50 text-vintage-white'
-                      : 'border-vintage bg-vintage-black border-vintage/30 text-vintage-white opacity-80 hover:bg-vintage-red/10'
+                      ? 'bg-retro-cyan/20 border-pixel/50 text-retro-cyan'
+                      : 'border-pixel bg-retro-dark border-pixel/30 text-retro-cyan opacity-80 hover:bg-retro-cyan/10'
                   } disabled:opacity-50`}
                 >
                   {area.charAt(0).toUpperCase() + area.slice(1)}
@@ -344,8 +344,8 @@ const TerraformEditor: React.FC<TerraformEditorProps> = ({
 
           <div className="flex-1 overflow-y-auto p-4">
             {loadingSuggestions && (
-              <div className="flex items-center gap-2 text-vintage-white opacity-60 text-sm">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-vintage"></div>
+              <div className="flex items-center gap-2 text-retro-cyan opacity-60 text-sm">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-pixel"></div>
                 <span>Getting suggestions...</span>
               </div>
             )}
@@ -353,26 +353,26 @@ const TerraformEditor: React.FC<TerraformEditorProps> = ({
             {/* Audit Results */}
             {selectedFocusArea === 'audit' && auditResult && auditResult.success && (
               <div className="space-y-4">
-                <div className="border-vintage bg-vintage-black p-4 rounded-xl border border-vintage/30">
+                <div className="border-pixel bg-retro-dark p-4 rounded-xl border border-pixel/30">
                   <h4 className="text-lg font-bold mb-2" className="font-heading">
                     Overall Grade: <span className={`${
-                      auditResult.grade.startsWith('A') ? 'text-vintage-white' :
-                      auditResult.grade === 'B' ? 'text-vintage-white' :
-                      auditResult.grade === 'C' ? 'text-vintage-white' : 'text-red-400'
+                      auditResult.grade.startsWith('A') ? 'text-retro-cyan' :
+                      auditResult.grade === 'B' ? 'text-retro-cyan' :
+                      auditResult.grade === 'C' ? 'text-retro-cyan' : 'text-red-400'
                     }`}>{auditResult.grade}</span>
                   </h4>
-                  <p className="text-sm text-vintage-white opacity-60">Score: {auditResult.overall_score}/100</p>
-                  <p className="text-sm text-vintage-white opacity-60">Total Issues: {auditResult.total_issues}</p>
+                  <p className="text-sm text-retro-cyan opacity-60">Score: {auditResult.overall_score}/100</p>
+                  <p className="text-sm text-retro-cyan opacity-60">Total Issues: {auditResult.total_issues}</p>
                 </div>
 
                 {auditResult.security && (
-                  <div className="border-vintage bg-vintage-black p-4 rounded-xl border border-yellow-500/30">
-                    <h5 className="text-sm font-bold text-vintage-white mb-2">🔒 Security Score: {auditResult.security.security_score}/100</h5>
+                  <div className="border-pixel bg-retro-dark p-4 rounded-xl border border-pixel500/30">
+                    <h5 className="text-sm font-bold text-retro-cyan mb-2">🔒 Security Score: {auditResult.security.security_score}/100</h5>
                     {auditResult.security.critical?.length > 0 && (
                       <div className="mb-2">
                         <p className="text-xs text-red-400 font-semibold">Critical Issues ({auditResult.security.critical.length}):</p>
                         {auditResult.security.critical.slice(0, 3).map((issue: any, i: number) => (
-                          <p key={i} className="text-xs text-vintage-white opacity-80 ml-2">• {issue.issue || JSON.stringify(issue)}</p>
+                          <p key={i} className="text-xs text-retro-cyan opacity-80 ml-2">• {issue.issue || JSON.stringify(issue)}</p>
                         ))}
                       </div>
                     )}
@@ -380,10 +380,10 @@ const TerraformEditor: React.FC<TerraformEditorProps> = ({
                 )}
 
                 {auditResult.validation && !auditResult.validation.valid && (
-                  <div className="border-vintage bg-vintage-black p-4 rounded-xl border border-red-500/30">
+                  <div className="border-pixel bg-retro-dark p-4 rounded-xl border border-red-500/30">
                     <h5 className="text-sm font-bold text-red-400 mb-2">❌ Validation Errors</h5>
                     {auditResult.validation.errors?.slice(0, 3).map((err: any, i: number) => (
-                      <p key={i} className="text-xs text-vintage-white opacity-80">• {err.summary || JSON.stringify(err)}</p>
+                      <p key={i} className="text-xs text-retro-cyan opacity-80">• {err.summary || JSON.stringify(err)}</p>
                     ))}
                   </div>
                 )}
@@ -393,30 +393,30 @@ const TerraformEditor: React.FC<TerraformEditorProps> = ({
             {/* Security Results */}
             {selectedFocusArea === 'security' && securityResult && securityResult.success && (
               <div className="space-y-4">
-                <div className="border-vintage bg-vintage-black p-4 rounded-xl border border-yellow-500/30">
-                  <h4 className="text-lg font-bold text-vintage-white mb-2">🔒 Security Score: {securityResult.security_score}/100</h4>
-                  <p className="text-sm text-vintage-white opacity-60">Total Issues: {securityResult.total_issues}</p>
+                <div className="border-pixel bg-retro-dark p-4 rounded-xl border border-pixel500/30">
+                  <h4 className="text-lg font-bold text-retro-cyan mb-2">🔒 Security Score: {securityResult.security_score}/100</h4>
+                  <p className="text-sm text-retro-cyan opacity-60">Total Issues: {securityResult.total_issues}</p>
                 </div>
 
                 {securityResult.critical?.length > 0 && (
-                  <div className="border-vintage bg-vintage-black p-4 rounded-xl border border-red-500/30">
+                  <div className="border-pixel bg-retro-dark p-4 rounded-xl border border-red-500/30">
                     <h5 className="text-sm font-bold text-red-400 mb-2">CRITICAL ({securityResult.critical.length})</h5>
                     {securityResult.critical.map((issue: any, i: number) => (
                       <div key={i} className="mb-3 pb-3 border-b border-red-500/20 last:border-0">
                         <p className="text-xs text-red-300 font-semibold">{issue.issue}</p>
-                        <p className="text-xs text-vintage-white opacity-60">Resource: {issue.resource}</p>
-                        <p className="text-xs text-vintage-white mt-1">Fix: {issue.fix}</p>
+                        <p className="text-xs text-retro-cyan opacity-60">Resource: {issue.resource}</p>
+                        <p className="text-xs text-retro-cyan mt-1">Fix: {issue.fix}</p>
                       </div>
                     ))}
                   </div>
                 )}
 
                 {securityResult.high?.length > 0 && (
-                  <div className="border-vintage bg-vintage-black p-4 rounded-xl border border-orange-500/30">
+                  <div className="border-pixel bg-retro-dark p-4 rounded-xl border border-orange-500/30">
                     <h5 className="text-sm font-bold text-orange-400 mb-2">HIGH ({securityResult.high.length})</h5>
                     {securityResult.high.slice(0, 5).map((issue: any, i: number) => (
                       <div key={i} className="mb-2">
-                        <p className="text-xs text-vintage-white opacity-80">• {issue.issue}</p>
+                        <p className="text-xs text-retro-cyan opacity-80">• {issue.issue}</p>
                       </div>
                     ))}
                   </div>
@@ -428,17 +428,17 @@ const TerraformEditor: React.FC<TerraformEditorProps> = ({
             {validationResult && validationResult.success && selectedFocusArea === 'validation' && (
               <div className="space-y-4">
                 {validationResult.valid ? (
-                  <div className="border-vintage bg-vintage-black p-4 rounded-xl border border-vintage/30">
-                    <h4 className="text-lg font-bold text-vintage-white">✅ Syntax Valid!</h4>
-                    <p className="text-sm text-vintage-white opacity-60 mt-2">{validationResult.message}</p>
+                  <div className="border-pixel bg-retro-dark p-4 rounded-xl border border-pixel/30">
+                    <h4 className="text-lg font-bold text-retro-cyan">✅ Syntax Valid!</h4>
+                    <p className="text-sm text-retro-cyan opacity-60 mt-2">{validationResult.message}</p>
                   </div>
                 ) : (
-                  <div className="border-vintage bg-vintage-black p-4 rounded-xl border border-red-500/30">
+                  <div className="border-pixel bg-retro-dark p-4 rounded-xl border border-red-500/30">
                     <h4 className="text-lg font-bold text-red-400 mb-2">❌ Syntax Errors</h4>
                     {validationResult.errors?.map((err: any, i: number) => (
                       <div key={i} className="mb-2 pb-2 border-b border-red-500/20 last:border-0">
                         <p className="text-xs text-red-300">{err.summary}</p>
-                        {err.detail && <p className="text-xs text-vintage-white opacity-60 mt-1">{err.detail}</p>}
+                        {err.detail && <p className="text-xs text-retro-cyan opacity-60 mt-1">{err.detail}</p>}
                       </div>
                     ))}
                   </div>
@@ -449,7 +449,7 @@ const TerraformEditor: React.FC<TerraformEditorProps> = ({
             {/* Regular Suggestions */}
             {suggestions && suggestions.success && !['audit', 'security', 'validation'].includes(selectedFocusArea) && (
               <div className="space-y-4">
-                <div className="text-sm text-vintage-white opacity-80 leading-relaxed whitespace-pre-wrap">
+                <div className="text-sm text-retro-cyan opacity-80 leading-relaxed whitespace-pre-wrap">
                   {suggestions.suggestions}
                 </div>
               </div>
@@ -457,15 +457,15 @@ const TerraformEditor: React.FC<TerraformEditorProps> = ({
 
             {analysis && analysis.success && !suggestions && !auditResult && !securityResult && (
               <div className="space-y-4">
-                <h4 className="text-xs font-bold text-white uppercase tracking-wide">Code Analysis</h4>
-                <div className="text-sm text-vintage-white opacity-80 leading-relaxed whitespace-pre-wrap">
+                <h4 className="text-xs font-bold text-retro-white uppercase tracking-wide">Code Analysis</h4>
+                <div className="text-sm text-retro-cyan opacity-80 leading-relaxed whitespace-pre-wrap">
                   {analysis.analysis}
                 </div>
               </div>
             )}
 
             {!suggestions && !analysis && !loadingSuggestions && !auditResult && !securityResult && !validationResult && (
-              <div className="text-center text-vintage-white opacity-50 text-sm py-8">
+              <div className="text-center text-retro-cyan opacity-50 text-sm py-8">
                 <p>Use the tools above to analyze,</p>
                 <p>validate, and improve your code</p>
               </div>
@@ -477,14 +477,14 @@ const TerraformEditor: React.FC<TerraformEditorProps> = ({
       {/* Version History Modal */}
       {showVersions && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="card-vintage border border-vintage/30 rounded-2xl max-w-3xl w-full max-h-[80vh] overflow-hidden flex flex-col">
-            <div className="px-6 py-4 border-b border-vintage/20 flex items-center justify-between">
-              <h3 className="text-lg font-bold text-white" className="font-heading">
+          <div className="card-retro border border-pixel/30 rounded-2xl max-w-3xl w-full max-h-[80vh] overflow-hidden flex flex-col">
+            <div className="px-6 py-4 border-b border-pixel/20 flex items-center justify-between">
+              <h3 className="text-lg font-bold text-retro-white" className="font-heading">
                 📜 Version History
               </h3>
               <button
                 onClick={() => setShowVersions(false)}
-                className="text-vintage-white opacity-60 hover:text-white transition-colors"
+                className="text-retro-cyan opacity-60 hover:text-retro-white transition-colors"
               >
                 ✕
               </button>
@@ -492,29 +492,29 @@ const TerraformEditor: React.FC<TerraformEditorProps> = ({
 
             <div className="flex-1 overflow-y-auto p-6">
               {versions.length === 0 ? (
-                <p className="text-vintage-white opacity-50 text-center py-8">No version history yet</p>
+                <p className="text-retro-cyan opacity-50 text-center py-8">No version history yet</p>
               ) : (
                 <div className="space-y-3">
                   {versions.map((version) => (
                     <div
                       key={version.version}
-                      className="border-vintage bg-vintage-black p-4 rounded-xl border border-vintage/20 hover:border-vintage/40 transition-all cursor-pointer"
+                      className="border-pixel bg-retro-dark p-4 rounded-xl border border-pixel/20 hover:border-pixel/40 transition-all cursor-pointer"
                       onClick={() => loadVersion(version.version)}
                     >
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-bold text-vintage-white">
+                        <span className="text-sm font-bold text-retro-cyan">
                           Version {version.version}
                         </span>
                         <span className={`text-xs px-2 py-1 rounded ${
                           version.modified_by === 'vishu'
-                            ? 'bg-vintage-black/20 text-vintage-white'
-                            : 'bg-vintage-black border-vintage/20 text-vintage-white'
+                            ? 'bg-retro-dark/20 text-retro-cyan'
+                            : 'bg-retro-dark border-pixel/20 text-retro-cyan'
                         }`}>
                           {version.modified_by === 'vishu' ? '🤖 Vishu' : '👤 User'}
                         </span>
                       </div>
-                      <p className="text-sm text-vintage-white opacity-80 mb-2">{version.change_description}</p>
-                      <div className="flex items-center gap-4 text-xs text-vintage-white opacity-60">
+                      <p className="text-sm text-retro-cyan opacity-80 mb-2">{version.change_description}</p>
+                      <div className="flex items-center gap-4 text-xs text-retro-cyan opacity-60">
                         <span>{formatTimestamp(version.timestamp)}</span>
                         <span>•</span>
                         <span>{version.code_length} chars</span>
