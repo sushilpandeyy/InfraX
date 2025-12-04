@@ -735,44 +735,77 @@ async def vishu_parse_resources(workflow_id: str, db: Session = Depends(get_db))
 # ===== Terraform Code Management Endpoints =====
 
 @app.get("/api/v1/workflows/{workflow_id}/code")
-async def get_terraform_code(workflow_id: str, db: Session = Depends(get_db)):
+async def get_terraform_code(workflow_id: str):
     """
     Get the current Terraform code for a workflow
     """
+    # Try database first, if available
     try:
-        # Fetch workflow from database
+        db = SessionLocal()
         workflow = db.query(WorkflowModel).filter(
             WorkflowModel.workflow_id == workflow_id
         ).first()
 
+        if workflow:
+            # Read Terraform file
+            terraform_code = vishu.read_terraform_file(workflow.code_path)
+
+            if terraform_code:
+                # Get latest version info
+                latest_version = db.query(CodeVersionModel).filter(
+                    CodeVersionModel.workflow_id == workflow_id
+                ).order_by(CodeVersionModel.version.desc()).first()
+
+                db.close()
+                return {
+                    "success": True,
+                    "workflow_id": workflow_id,
+                    "terraform_code": terraform_code,
+                    "file_path": workflow.code_path,
+                    "file_name": workflow.code_file,
+                    "current_version": latest_version.version if latest_version else 1,
+                    "last_modified": latest_version.timestamp.isoformat() if latest_version else workflow.timestamp.isoformat()
+                }
+        db.close()
+    except Exception as e:
+        # Database failed, continue to in-memory fallback
+        print(f"⚠️  Database query failed, trying in-memory: {e}")
+
+    # Fallback to in-memory storage
+    try:
+        # Get workflow from in-memory history
+        history = brahma.get_workflow_history()
+        workflow = next((w for w in history if w["workflow_id"] == workflow_id), None)
+
         if not workflow:
             raise HTTPException(status_code=404, detail="Workflow not found")
 
+        # Get code path from workflow summary
+        code_path = workflow.get("summary", {}).get("code_path")
+        code_file = workflow.get("summary", {}).get("code_file")
+
+        if not code_path:
+            raise HTTPException(status_code=404, detail="Code path not found in workflow")
+
         # Read Terraform file
-        terraform_code = vishu.read_terraform_file(workflow.code_path)
+        terraform_code = vishu.read_terraform_file(code_path)
 
         if not terraform_code:
             raise HTTPException(status_code=404, detail="Terraform file not found")
-
-        # Get latest version info
-        latest_version = db.query(CodeVersionModel).filter(
-            CodeVersionModel.workflow_id == workflow_id
-        ).order_by(CodeVersionModel.version.desc()).first()
 
         return {
             "success": True,
             "workflow_id": workflow_id,
             "terraform_code": terraform_code,
-            "file_path": workflow.code_path,
-            "file_name": workflow.code_file,
-            "current_version": latest_version.version if latest_version else 1,
-            "last_modified": latest_version.timestamp.isoformat() if latest_version else workflow.timestamp.isoformat()
+            "file_path": code_path,
+            "file_name": code_file,
+            "current_version": 1,
+            "last_modified": workflow.get("timestamp")
         }
-
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=f"Failed to get code: {str(e)}")
 
 @app.post("/api/v1/workflows/{workflow_id}/code")
 async def update_terraform_code(workflow_id: str, request: UpdateCodeRequest, db: Session = Depends(get_db)):

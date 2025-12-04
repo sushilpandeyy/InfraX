@@ -9,7 +9,8 @@ const Sidebar: React.FC = () => {
     { path: '/', label: 'Dashboard' },
     { path: '/create', label: 'Create Workflow' },
     { path: '/workflows', label: 'Workflows' },
-    { path: '/analytics', label: 'Analytics' },
+    { path: '/compare', label: 'Compare' },
+    { path: '/shiva', label: 'Shiva' },
     { path: '/settings', label: 'Settings' },
   ];
 

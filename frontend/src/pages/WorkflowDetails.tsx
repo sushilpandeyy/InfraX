@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { brahmaApi, vishuApi, codeApi } from '../api/brahma';
+import { brahmaApi, codeApi } from '../api/brahma';
 import type { WorkflowResult } from '../types';
 import MermaidDiagram from '../components/MermaidDiagram';
-import VishuChat from '../components/VishuChat';
-import TerraformEditor from '../components/TerraformEditor';
-import AdvancedVishuFeatures from '../components/AdvancedVishuFeatures';
+import ReactMarkdown from 'react-markdown';
+import CostEstimator from '../components/CostEstimator';
 
 const WorkflowDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [workflow, setWorkflow] = useState<WorkflowResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'overview' | 'diagram' | 'code' | 'cost' | 'vishu' | 'advanced'>('overview');
-  const [vishuInsights, setVishuInsights] = useState<any>(null);
-  const [loadingInsights, setLoadingInsights] = useState(false);
+  const [activeTab, setActiveTab] = useState<'overview' | 'diagram' | 'code' | 'cost' | 'vishnu'>('overview');
   const [terraformCode, setTerraformCode] = useState<string>('');
   const [loadingCode, setLoadingCode] = useState(false);
+  const [customRequest, setCustomRequest] = useState('');
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [customResponse, setCustomResponse] = useState('');
 
   const loadWorkflow = async (workflowId: string) => {
     try {
@@ -27,20 +27,6 @@ const WorkflowDetails: React.FC = () => {
       setError(error.response?.data?.detail || 'Failed to load workflow details');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const loadVishuInsights = async () => {
-    if (!id) return;
-
-    setLoadingInsights(true);
-    try {
-      const insights = await vishuApi.getQuickInsights(id);
-      setVishuInsights(insights);
-    } catch (err) {
-      console.error('Failed to load Vishu insights:', err);
-    } finally {
-      setLoadingInsights(false);
     }
   };
 
@@ -69,13 +55,31 @@ const WorkflowDetails: React.FC = () => {
 
   // Load tab-specific data when tab changes
   useEffect(() => {
-    if (activeTab === 'vishu' && !vishuInsights) {
-      loadVishuInsights();
-    }
     if (activeTab === 'code' && !terraformCode) {
       loadTerraformCode();
     }
-  }, [activeTab, vishuInsights, terraformCode, id]);
+  }, [activeTab, terraformCode, id]);
+
+  const handleCustomRequest = async () => {
+    if (!customRequest.trim()) return;
+
+    setIsProcessing(true);
+    setCustomResponse('');
+
+    try {
+      // Simulate AI processing (you would call your backend API here)
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // Mock response based on request
+      const mockResponse = `✅ Analyzing your request: "${customRequest}"\n\nBased on your current workflow configuration:\n- Cloud Provider: ${workflow?.summary.cloud_provider.toUpperCase()}\n- Services: ${workflow?.summary.services_count}\n- Region: ${workflow?.summary.region}\n\nRecommendations:\n• Your request has been noted and would require architectural adjustments\n• Estimated impact on cost: Minimal to moderate\n• Implementation complexity: Medium\n\nNext Steps:\n1. Review the suggested changes\n2. Update your Terraform configuration\n3. Re-run cost analysis\n\nNote: This is a preview. Connect to OpenAI API for detailed AI-powered analysis.`;
+
+      setCustomResponse(mockResponse);
+    } catch (error) {
+      setCustomResponse('❌ Error processing request. Please try again.');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -100,9 +104,8 @@ const WorkflowDetails: React.FC = () => {
     { id: 'overview', label: 'Overview', icon: '📊' },
     { id: 'diagram', label: 'Architecture', icon: '🏗️' },
     { id: 'code', label: 'Terraform Code', icon: '💻' },
-    { id: 'cost', label: 'Cost Analysis', icon: '💰' },
-    { id: 'vishu', label: 'Ask Vishu', icon: '🤖' },
-    { id: 'advanced', label: 'Advanced AI', icon: '🚀' },
+    { id: 'cost', label: 'Cost Estimation', icon: '💰' },
+    { id: 'vishnu', label: 'Vishnu', icon: '🤖' },
   ];
 
   return (
@@ -151,7 +154,7 @@ const WorkflowDetails: React.FC = () => {
             {tabs.map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as 'overview' | 'diagram' | 'code' | 'cost' | 'vishu' | 'advanced')}
+                onClick={() => setActiveTab(tab.id as 'overview' | 'diagram' | 'code' | 'cost' | 'vishnu')}
                 className={`py-4 px-1 border-b-2 font-semibold text-xs sm:text-sm transition-all whitespace-nowrap ${
                   activeTab === tab.id
                     ? 'border-pixel text-retro-cyan'
@@ -170,33 +173,39 @@ const WorkflowDetails: React.FC = () => {
           {activeTab === 'overview' && (
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg font-bold text-retro-white mb-3" className="font-heading">Input Prompt</h3>
-                <p className="border-pixel bg-retro-dark p-5 rounded-xl text-retro-cyan opacity-80 border border-pixel/20">
-                  {workflow.input.prompt}
-                </p>
+                <h3 className="text-lg font-bold text-retro-white mb-3 font-heading">Input Prompt</h3>
+                <div className="border-pixel bg-retro-dark p-5 rounded-xl text-retro-cyan opacity-80 border border-pixel/20 prose prose-invert max-w-none">
+                  <ReactMarkdown>
+                    {String(workflow.input.prompt || '')}
+                  </ReactMarkdown>
+                </div>
               </div>
 
               {workflow.input.location && (
                 <div>
-                  <h3 className="text-lg font-bold text-retro-white mb-3" className="font-heading">Target Location</h3>
-                  <p className="border-pixel bg-retro-dark p-5 rounded-xl text-retro-cyan opacity-80 border border-pixel/20">
-                    📍 {workflow.input.location}
-                  </p>
+                  <h3 className="text-lg font-bold text-retro-white mb-3 font-heading">Target Location</h3>
+                  <div className="border-pixel bg-retro-dark p-5 rounded-xl text-retro-cyan opacity-80 border border-pixel/20">
+                    <p>📍 {workflow.input.location}</p>
+                  </div>
                 </div>
               )}
 
               <div>
-                <h3 className="text-lg font-bold text-retro-white mb-3" className="font-heading">Location Rationale</h3>
-                <p className="border-pixel bg-retro-dark p-5 rounded-xl text-retro-cyan opacity-80 border border-pixel/30">
-                  {workflow.summary.location_rationale}
-                </p>
+                <h3 className="text-lg font-bold text-retro-white mb-3 font-heading">Location Rationale</h3>
+                <div className="border-pixel bg-retro-dark p-5 rounded-xl text-retro-cyan opacity-80 border border-pixel/30 prose prose-invert max-w-none">
+                  <ReactMarkdown>
+                    {String(workflow.summary.location_rationale || '')}
+                  </ReactMarkdown>
+                </div>
               </div>
 
               <div>
-                <h3 className="text-lg font-bold text-retro-white mb-3" className="font-heading">Architecture Details</h3>
+                <h3 className="text-lg font-bold text-retro-white mb-3 font-heading">Architecture Details</h3>
                 <div className="border-pixel bg-retro-dark p-5 rounded-xl border border-pixel/20">
-                  <pre className="text-sm text-retro-cyan opacity-80 whitespace-pre-wrap">
-                    {JSON.stringify(workflow.summary.architecture, null, 2)}
+                  <pre className="text-sm text-retro-cyan opacity-80 whitespace-pre-wrap font-mono">
+                    {typeof workflow.summary.architecture === 'string'
+                      ? workflow.summary.architecture
+                      : JSON.stringify(workflow.summary.architecture, null, 2)}
                   </pre>
                 </div>
               </div>
@@ -222,25 +231,44 @@ const WorkflowDetails: React.FC = () => {
 
           {/* Code Tab */}
           {activeTab === 'code' && (
-            <div className="h-[800px]">
+            <div>
               {loadingCode ? (
-                <div className="flex items-center justify-center h-full">
+                <div className="flex items-center justify-center h-64">
                   <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pixel mx-auto mb-4"></div>
                     <p className="text-retro-cyan opacity-60">Loading Terraform code...</p>
                   </div>
                 </div>
               ) : terraformCode ? (
-                <TerraformEditor
-                  workflowId={workflow.workflow_id}
-                  initialCode={terraformCode}
-                  onSave={(updatedCode) => {
-                    setTerraformCode(updatedCode);
-                    console.log('Code saved successfully');
-                  }}
-                />
+                <div>
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-bold text-retro-white font-heading">Terraform Code</h3>
+                    <button
+                      onClick={() => {
+                        const blob = new Blob([terraformCode], { type: 'text/plain' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `terraform_${workflow.workflow_id}.tf`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                      }}
+                      className="btn-retro px-4 py-2 text-sm font-semibold flex items-center gap-2"
+                    >
+                      <span>⬇</span>
+                      Download .tf File
+                    </button>
+                  </div>
+                  <div className="border-pixel bg-retro-dark p-5 rounded-xl border border-pixel/20 overflow-x-auto">
+                    <pre className="text-sm text-retro-cyan font-mono">
+                      <code>{terraformCode}</code>
+                    </pre>
+                  </div>
+                </div>
               ) : (
-                <div className="flex items-center justify-center h-full">
+                <div className="flex items-center justify-center h-64">
                   <p className="text-retro-cyan opacity-50">No Terraform code available</p>
                 </div>
               )}
@@ -249,94 +277,131 @@ const WorkflowDetails: React.FC = () => {
 
           {/* Cost Tab */}
           {activeTab === 'cost' && (
-            <div className="space-y-6">
-              <div className="border-pixel bg-retro-dark border border-pixel/30 p-6 rounded-xl">
-                <h3 className="text-lg font-bold text-retro-cyan mb-2" className="font-heading">
-                  Estimated Monthly Savings
-                </h3>
-                <p className="text-4xl font-bold text-retro-cyan mb-2">
-                  ${workflow.summary.estimated_savings.toFixed(2)}
-                </p>
-                <p className="text-sm text-retro-cyan">
-                  Based on AI-powered cost optimization strategies
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-bold text-retro-white mb-3" className="font-heading">
-                  Cost Optimization Strategies
-                </h3>
-                <div className="border-pixel bg-retro-dark p-5 rounded-xl border border-pixel/20">
-                  <pre className="text-sm text-retro-cyan opacity-80 whitespace-pre-wrap">
-                    {JSON.stringify(workflow.steps['2_cost_optimization'].strategies || {}, null, 2)}
-                  </pre>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Vishu Agent Tab */}
-          {activeTab === 'vishu' && (
             <div>
-              {/* Quick Insights Panel */}
-              {loadingInsights ? (
-                <div className="border-pixel bg-retro-dark p-6 rounded-xl mb-6 border border-pixel/20">
-                  <div className="flex items-center gap-3 text-retro-cyan opacity-60">
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-pixel"></div>
-                    <span>Vishu is analyzing your infrastructure...</span>
-                  </div>
-                </div>
-              ) : vishuInsights && vishuInsights.success && (
-                <div className="border-pixel bg-retro-dark p-6 rounded-xl mb-6 border border-pixel/20">
-                  <h3 className="text-lg font-bold text-retro-white mb-4 flex items-center gap-2" className="font-heading">
-                    <span>💡</span>
-                    Quick Insights
-                  </h3>
-                  <div className="space-y-4">
-                    <div>
-                      <p className="text-retro-cyan opacity-80 leading-relaxed">{vishuInsights.summary}</p>
-                    </div>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-pixel/20">
-                      <div className="text-center">
-                        <div className="text-2xl font-bold text-retro-cyan" className="font-heading">
-                          {vishuInsights.metrics.total_lines}
-                        </div>
-                        <div className="text-xs text-retro-cyan opacity-60 mt-1">Total Lines</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-2xl font-bold text-retro-cyan" className="font-heading">
-                          {vishuInsights.metrics.resources}
-                        </div>
-                        <div className="text-xs text-retro-cyan opacity-60 mt-1">Resources</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-2xl font-bold text-retro-cyan" className="font-heading">
-                          {vishuInsights.metrics.variables}
-                        </div>
-                        <div className="text-xs text-retro-cyan opacity-60 mt-1">Variables</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-2xl font-bold text-retro-cyan" className="font-heading">
-                          {vishuInsights.metrics.outputs}
-                        </div>
-                        <div className="text-xs text-retro-cyan opacity-60 mt-1">Outputs</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Chat Interface */}
-              <div className="h-[600px] rounded-2xl overflow-hidden border border-pixel/30">
-                <VishuChat workflowId={workflow.workflow_id} />
-              </div>
+              <CostEstimator workflow={workflow} />
             </div>
           )}
 
-          {/* Advanced AI Features Tab */}
-          {activeTab === 'advanced' && (
-            <div className="h-[800px]">
-              <AdvancedVishuFeatures workflowId={workflow.workflow_id} />
+          {/* Vishnu Tab - Custom Workflow Modifications */}
+          {activeTab === 'vishnu' && (
+            <div className="space-y-6">
+              {/* Header */}
+              <div className="card-retro border border-pixel/30 rounded-2xl p-6">
+                <h3 className="text-xl font-bold text-retro-white mb-4 font-heading flex items-center gap-2">
+                  🤖 Vishnu AI - Custom Workflow Modifications
+                </h3>
+                <p className="text-sm text-retro-cyan opacity-70 mb-4">
+                  Request custom changes to your workflow architecture, add new services, or optimize specific components using AI-powered analysis.
+                </p>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-retro-cyan mb-2">
+                      What would you like to change?
+                    </label>
+                    <textarea
+                      value={customRequest}
+                      onChange={(e) => setCustomRequest(e.target.value)}
+                      placeholder="Example: Add Redis cache layer, enable auto-scaling for peak hours, implement CDN for static assets..."
+                      className="w-full px-4 py-3 bg-retro-dark border border-pixel/30 rounded-xl text-retro-white placeholder-retro-cyan/40 focus:outline-none focus:border-pixel transition-colors resize-none font-mono text-sm"
+                      rows={5}
+                      disabled={isProcessing}
+                    />
+                  </div>
+
+                  <button
+                    onClick={handleCustomRequest}
+                    disabled={isProcessing || !customRequest.trim()}
+                    className={`btn-retro w-full py-3 px-6 font-semibold flex items-center justify-center gap-2 ${
+                      isProcessing || !customRequest.trim() ? 'opacity-50 cursor-not-allowed' : ''
+                    }`}
+                  >
+                    {isProcessing ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-retro-white"></div>
+                        Processing Request...
+                      </>
+                    ) : (
+                      <>
+                        <span>🤖</span>
+                        Analyze & Suggest Changes
+                      </>
+                    )}
+                  </button>
+
+                  {customResponse && (
+                    <div className="mt-4 p-5 bg-retro-dark/50 rounded-xl border border-pixel/20">
+                      <div className="text-sm text-retro-cyan whitespace-pre-wrap font-mono">
+                        {customResponse}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Quick Action Buttons */}
+                  <div className="mt-6">
+                    <label className="block text-sm font-semibold text-retro-cyan mb-3">
+                      Quick Actions
+                    </label>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                      {[
+                        { label: 'Add CDN', icon: '🚀' },
+                        { label: 'Enable Auto-Scaling', icon: '📈' },
+                        { label: 'Add Redis Cache', icon: '⚡' },
+                        { label: 'Setup Load Balancer', icon: '⚖️' },
+                        { label: 'Add Monitoring', icon: '📊' },
+                        { label: 'Implement Backup', icon: '💾' },
+                      ].map((action) => (
+                        <button
+                          key={action.label}
+                          onClick={() => setCustomRequest(action.label)}
+                          className="p-3 rounded-xl border border-pixel/30 text-retro-cyan opacity-60 hover:opacity-100 hover:border-pixel/60 hover:bg-pixel/5 transition-all text-xs font-semibold"
+                        >
+                          <span className="mr-1">{action.icon}</span>
+                          {action.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Current Workflow Info */}
+              <div className="card-retro border border-pixel/30 rounded-2xl p-6">
+                <h3 className="text-lg font-bold text-retro-white mb-4 font-heading">
+                  📋 Current Workflow Configuration
+                </h3>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="p-4 bg-retro-dark/50 rounded-xl border border-pixel/20">
+                    <div className="text-xs text-retro-cyan opacity-60 mb-1 uppercase">Cloud Provider</div>
+                    <div className="text-lg font-bold text-retro-white uppercase">
+                      {workflow.summary.cloud_provider}
+                    </div>
+                  </div>
+                  <div className="p-4 bg-retro-dark/50 rounded-xl border border-pixel/20">
+                    <div className="text-xs text-retro-cyan opacity-60 mb-1 uppercase">Region</div>
+                    <div className="text-lg font-bold text-retro-white">
+                      {workflow.summary.region}
+                    </div>
+                  </div>
+                  <div className="p-4 bg-retro-dark/50 rounded-xl border border-pixel/20">
+                    <div className="text-xs text-retro-cyan opacity-60 mb-1 uppercase">Services Count</div>
+                    <div className="text-lg font-bold text-retro-white">
+                      {workflow.summary.services_count}
+                    </div>
+                  </div>
+                  <div className="p-4 bg-retro-dark/50 rounded-xl border border-pixel/20">
+                    <div className="text-xs text-retro-cyan opacity-60 mb-1 uppercase">Estimated Savings</div>
+                    <div className="text-lg font-bold text-retro-white">
+                      ${workflow.summary.estimated_savings.toFixed(2)}/mo
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Disclaimer */}
+              <div className="text-xs text-retro-cyan opacity-40 text-center">
+                ⚠️ AI-generated suggestions are approximations. Always review changes carefully before implementing them in your infrastructure.
+              </div>
             </div>
           )}
         </div>
